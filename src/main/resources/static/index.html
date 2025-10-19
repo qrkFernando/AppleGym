@@ -17,10 +17,10 @@
                 <span>AppleGym</span>
             </div>
             <div class="nav-menu" id="nav-menu">
-                <a href="#home" class="nav-link">Inicio</a>
-                <a href="#catalog" class="nav-link">Catálogo</a>
-                <a href="#services" class="nav-link">Servicios</a>
-                <a href="#about" class="nav-link">Nosotros</a>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="catalogo.html" class="nav-link">Catálogo</a>
+                <a href="productos.html" class="nav-link">Productos</a>
+                <a href="servicios.html" class="nav-link">Servicios</a>
                 <div class="nav-auth">
                     <button class="btn-login" onclick="showLogin()">Iniciar Sesión</button>
                     <button class="btn-register" onclick="showRegister()">Registrarse</button>
@@ -47,27 +47,12 @@
         <div class="hero-content">
             <h1>Bienvenido a <span class="highlight">AppleGym</span></h1>
             <p>Tu gimnasio digital con los mejores productos y servicios para tu entrenamiento</p>
-            <button class="btn-primary" onclick="document.getElementById('catalog').scrollIntoView()">
+            <button class="btn-primary" onclick="window.location.href='catalogo.html'">
                 Explorar Catálogo
             </button>
         </div>
         <div class="hero-image">
             <i class="fas fa-dumbbell hero-icon"></i>
-        </div>
-    </section>
-
-    <!-- Catálogo Section -->
-    <section id="catalog" class="catalog">
-        <div class="container">
-            <h2>Nuestro Catálogo</h2>
-            <div class="catalog-filters">
-                <button class="filter-btn active" onclick="filterProducts('all')">Todos</button>
-                <button class="filter-btn" onclick="filterProducts('productos')">Productos</button>
-                <button class="filter-btn" onclick="filterProducts('servicios')">Servicios</button>
-            </div>
-            <div class="catalog-grid" id="catalog-grid">
-                <!-- Productos se cargan dinámicamente -->
-            </div>
         </div>
     </section>
 
@@ -92,28 +77,8 @@
                     <p>Asesoramiento nutricional personalizado</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <h2>Acerca de AppleGym</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Tu bienestar es nuestra prioridad</h3>
-                    <p>En AppleGym combinamos tecnología y fitness para brindarte la mejor experiencia de entrenamiento. 
-                    Nuestra plataforma digital te permite acceder a productos, servicios y entrenamientos de calidad.</p>
-                    <ul>
-                        <li><i class="fas fa-check"></i> Productos de alta calidad</li>
-                        <li><i class="fas fa-check"></i> Servicios personalizados</li>
-                        <li><i class="fas fa-check"></i> Tecnología avanzada</li>
-                        <li><i class="fas fa-check"></i> Atención 24/7</li>
-                    </ul>
-                </div>
-                <div class="about-image">
-                    <i class="fas fa-heartbeat"></i>
-                </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="servicios.html" class="btn-primary">Ver Todos los Servicios</a>
             </div>
         </div>
     </section>
@@ -208,10 +173,10 @@
                 </div>
                 <div class="footer-section">
                     <h4>Enlaces</h4>
-                    <a href="#home">Inicio</a>
-                    <a href="#catalog">Catálogo</a>
-                    <a href="#services">Servicios</a>
-                    <a href="#about">Nosotros</a>
+                    <a href="index.html">Inicio</a>
+                    <a href="catalogo.html">Catálogo</a>
+                    <a href="productos.html">Productos</a>
+                    <a href="servicios.html">Servicios</a>
                 </div>
                 <div class="footer-section">
                     <h4>Contacto</h4>
@@ -233,6 +198,10 @@
     <!-- Notification System -->
     <div id="notification" class="notification" style="display: none;"></div>
 
-    <script src="js/app.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

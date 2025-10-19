@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios - AppleGym</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-dumbbell"></i>
+                <span>AppleGym</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="catalogo.html" class="nav-link">Catálogo</a>
+                <a href="productos.html" class="nav-link">Productos</a>
+                <a href="servicios.html" class="nav-link active">Servicios</a>
+                <div class="nav-auth">
+                    <button class="btn-login" onclick="showLogin()">Iniciar Sesión</button>
+                    <button class="btn-register" onclick="showRegister()">Registrarse</button>
+                </div>
+                <div class="nav-user" id="nav-user" style="display: none;">
+                    <span id="user-name">Usuario</span>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+                </div>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-users"></i> Nuestros Servicios</h1>
+            <p>Entrenamiento profesional y asesoramiento especializado</p>
+            <nav class="breadcrumb">
+                <a href="index.html">Inicio</a>
+                <span>/</span>
+                <span>Servicios</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Services Categories -->
+    <section class="categories">
+        <div class="container">
+            <h2>Tipos de Servicios</h2>
+            <div class="categories-grid">
+                <div class="category-card" onclick="filterByCategory('Entrenamiento')">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>Entrenamiento</h3>
+                    <p>Sesiones personalizadas</p>
+                </div>
+                <div class="category-card" onclick="filterByCategory('Clases Grupales')">
+                    <i class="fas fa-users"></i>
+                    <h3>Clases Grupales</h3>
+                    <p>Yoga, CrossFit y más</p>
+                </div>
+                <div class="category-card" onclick="filterByCategory('Nutricion')">
+                    <i class="fas fa-apple-alt"></i>
+                    <h3>Nutrición</h3>
+                    <p>Asesoramiento nutricional</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Features -->
+    <section class="services-features">
+        <div class="container">
+            <h2>¿Por qué elegir nuestros servicios?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-certificate"></i>
+                    <h4>Profesionales Certificados</h4>
+                    <p>Todos nuestros entrenadores y nutricionistas están certificados</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-clock"></i>
+                    <h4>Horarios Flexibles</h4>
+                    <p>Adaptamos los horarios a tu disponibilidad</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-heart"></i>
+                    <h4>Atención Personalizada</h4>
+                    <p>Cada servicio se adapta a tus necesidades específicas</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>Seguimiento de Progreso</h4>
+                    <p>Monitoreamos tu progreso y ajustamos el plan según necesidad</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="catalog">
+        <div class="container">
+            <div class="catalog-controls">
+                <div class="catalog-filters">
+                    <button class="filter-btn active" onclick="filterByCategory('Todos')">Todos</button>
+                    <button class="filter-btn" onclick="filterByCategory('Entrenamiento')">Entrenamiento</button>
+                    <button class="filter-btn" onclick="filterByCategory('Clases Grupales')">Clases Grupales</button>
+                    <button class="filter-btn" onclick="filterByCategory('Nutricion')">Nutrición</button>
+                </div>
+                <div class="catalog-search">
+                    <input type="text" id="search-input" placeholder="Buscar servicios..." onkeyup="searchServices()">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            <div class="catalog-grid" id="services-grid">
+                <!-- Servicios se cargan dinámicamente -->
+            </div>
+            <div id="no-results" class="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>No se encontraron servicios</h3>
+                <p>Intenta cambiar los filtros o el término de búsqueda</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-services">
+        <div class="container">
+            <h2>¿Necesitas más información?</h2>
+            <p>Nuestro equipo está listo para ayudarte a elegir el servicio perfecto</p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <h4>Llámanos</h4>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <h4>Escríbenos</h4>
+                    <p>info@applegym.com</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <h4>Horarios</h4>
+                    <p>Lun-Dom: 6:00 AM - 10:00 PM</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('login-modal')">&times;</span>
+            <h2>Iniciar Sesión</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Contraseña:</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Iniciar Sesión</button>
+            </form>
+            <p>¿No tienes cuenta? <a href="#" onclick="closeModal('login-modal'); showRegister()">Regístrate aquí</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('register-modal')">&times;</span>
+            <h2>Registro de Usuario</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Nombre Completo:</label>
+                    <input type="text" id="register-name" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email:</label>
+                    <input type="email" id="register-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Teléfono:</label>
+                    <input type="tel" id="register-phone" name="telefono" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-address">Dirección:</label>
+                    <input type="text" id="register-address" name="direccion" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Contraseña:</label>
+                    <input type="password" id="register-password" name="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Registrarse</button>
+            </form>
+            <p>¿Ya tienes cuenta? <a href="#" onclick="closeModal('register-modal'); showLogin()">Inicia sesión aquí</a></p>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cart-modal')">&times;</span>
+            <h2>Carrito de Compras</h2>
+            <div id="cart-items">
+                <!-- Items del carrito se cargan dinámicamente -->
+            </div>
+            <div class="cart-total">
+                <h3>Total: $<span id="cart-total">0.00</span></h3>
+            </div>
+            <div class="cart-actions">
+                <button class="btn-secondary" onclick="continueShopping()">Seguir Comprando</button>
+                <button class="btn-primary" onclick="proceedToCheckout()">Proceder al Pago</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Detail Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('product-modal')">&times;</span>
+            <div id="product-detail">
+                <!-- Detalles del servicio se cargan dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-dumbbell"></i> AppleGym</h3>
+                    <p>Tu gimnasio digital de confianza</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <a href="index.html">Inicio</a>
+                    <a href="catalogo.html">Catálogo</a>
+                    <a href="productos.html">Productos</a>
+                    <a href="servicios.html">Servicios</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@applegym.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AppleGym. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification" class="notification" style="display: none;"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/services.js"></script>
+</body>
+</html>

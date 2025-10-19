@@ -44,6 +44,12 @@ public class CategoriaServiceImpl implements CategoriaService {
                 .collect(Collectors.toList());
     }
     
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoriaDTO> buscarCategoriasActivas() {
+        return obtenerCategoriasActivas();
+    }
+    
     private CategoriaDTO convertirADTO(Categoria categoria) {
         CategoriaDTO dto = modelMapper.map(categoria, CategoriaDTO.class);
         dto.setTotalProductos(categoria.getTotalProductos());

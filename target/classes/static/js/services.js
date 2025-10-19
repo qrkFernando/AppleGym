@@ -34,14 +34,12 @@ async function loadServicesData() {
     showLoading();
     
     try {
-        console.log('Cargando servicios...');
+        console.log('🔄 Cargando servicios desde la base de datos MySQL...');
         
-        // Intentar cargar datos reales de la API
-        const apiSuccess = await loadRealData();
+        const success = await loadServicesFromAPI();
         
-        if (!apiSuccess) {
-            console.log('API no disponible, cargando datos de ejemplo...');
-            loadSampleData();
+        if (success) {
+            showNotification('✅ Servicios cargados desde tu base de datos MySQL', 'success');
         }
         
         // Establecer filtro inicial para servicios
@@ -49,15 +47,35 @@ async function loadServicesData() {
         currentCategory = 'Todos';
         
         renderServices();
-        console.log('Servicios cargados exitosamente');
+        console.log('✅ Servicios cargados exitosamente desde la base de datos');
         
     } catch (error) {
-        console.error('Error cargando servicios:', error);
-        loadSampleData();
+        console.error('❌ Error crítico:', error);
+        showNotification('❌ Error: No se puede conectar con la base de datos MySQL', 'error');
+        
+        // Establecer array vacío y mostrar mensaje de error
+        products = [];
         currentFilter = 'servicios';
         currentCategory = 'Todos';
+        
         renderServices();
-        showNotification('Cargando datos de demostracion', 'info');
+        
+        // Mostrar mensaje específico en la grid
+        const servicesGrid = document.getElementById('services-grid');
+        if (servicesGrid) {
+            servicesGrid.innerHTML = `
+                <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 3rem; background: #ffebee; border-radius: 8px; margin: 2rem 0;">
+                    <i class="fas fa-cogs" style="font-size: 4rem; color: #f44336; margin-bottom: 1rem;"></i>
+                    <h3 style="color: #f44336; margin-bottom: 1rem;">No se pueden cargar los servicios</h3>
+                    <p style="color: #666;">Revisa la conexión con la base de datos MySQL</p>
+                    <div style="margin-top: 1rem;">
+                        <button onclick="location.reload()" class="btn-primary">
+                            <i class="fas fa-redo"></i> Reintentar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
     } finally {
         hideLoading();
     }

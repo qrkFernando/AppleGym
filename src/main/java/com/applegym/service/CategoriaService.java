@@ -14,4 +14,6 @@ import java.util.List;
 public interface CategoriaService {
     
     List<CategoriaDTO> obtenerCategoriasActivas();
+    
+    List<CategoriaDTO> buscarCategoriasActivas();
 }

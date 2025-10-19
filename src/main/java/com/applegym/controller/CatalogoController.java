@@ -280,4 +280,233 @@ public class CatalogoController {
             return ResponseEntity.internalServerError().body(errorResponse);
         }
     }
+    
+    /**
+     * Endpoint simple para probar conectividad
+     */
+    @GetMapping("/test")
+    public ResponseEntity<?> testEndpoint() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "API funcionando correctamente");
+        response.put("timestamp", java.time.LocalDateTime.now());
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * Obtiene todos los productos y servicios para el frontend.
+     * Formato compatible con el JavaScript.
+     */
+    @GetMapping("/completo")
+    public ResponseEntity<?> obtenerCatalogoCompleto(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size,
+            @RequestParam(required = false) String busqueda,
+            @RequestParam(required = false) Long categoria,
+            @RequestParam(required = false) BigDecimal precioMin,
+            @RequestParam(required = false) BigDecimal precioMax) {
+        
+        try {
+            logger.info("Obteniendo catálogo completo para frontend");
+            
+            // Crear respuesta simple para probar
+            List<Map<String, Object>> items = new java.util.ArrayList<>();
+            
+            // Agregar algunos productos hardcodeados temporalmente
+            Map<String, Object> producto1 = new HashMap<>();
+            producto1.put("id", 1L);
+            producto1.put("nombre", "Proteína Whey");
+            producto1.put("descripcion", "Proteína de alta calidad");
+            producto1.put("precio", 45.99);
+            producto1.put("stock", 100);
+            producto1.put("tipo", "productos");
+            producto1.put("categoria", "Suplementos");
+            producto1.put("icon", "fas fa-flask");
+            producto1.put("disponible", true);
+            items.add(producto1);
+            
+            Map<String, Object> servicio1 = new HashMap<>();
+            servicio1.put("id", 1L);
+            servicio1.put("nombre", "Entrenamiento Personal");
+            servicio1.put("descripcion", "Sesión personalizada");
+            servicio1.put("precio", 65.00);
+            servicio1.put("duracion", 60);
+            servicio1.put("tipo", "servicios");
+            servicio1.put("categoria", "Entrenamiento");
+            servicio1.put("icon", "fas fa-user-tie");
+            servicio1.put("disponible", true);
+            items.add(servicio1);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("items", items);
+            response.put("totalElements", 2L);
+            response.put("totalPages", 1);
+            response.put("currentPage", page);
+            response.put("message", "Datos de prueba - conectando con base de datos...");
+            
+            logger.info("Respuesta preparada con {} items", items.size());
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Error obteniendo catálogo completo: ", e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", "Error interno del servidor: " + e.getMessage());
+            errorResponse.put("stackTrace", e.getStackTrace()[0].toString());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+    
+    /**
+     * Obtiene solo productos en formato para JavaScript.
+     */
+    @GetMapping("/productos")
+    public ResponseEntity<?> obtenerProductosParaFrontend(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size,
+            @RequestParam(required = false) String busqueda,
+            @RequestParam(required = false) Long categoria,
+            @RequestParam(required = false) BigDecimal precioMin,
+            @RequestParam(required = false) BigDecimal precioMax) {
+        
+        try {
+            logger.info("Obteniendo productos para frontend - página: {}, tamaño: {}", page, size);
+            
+            Pageable pageable = PageRequest.of(page, size, Sort.by("nombre").ascending());
+            
+            Page<ProductoDTO> productos = productoService.buscarProductosDisponibles(
+                busqueda, categoria, precioMin, precioMax, pageable);
+            
+            List<Map<String, Object>> items = new java.util.ArrayList<>();
+            
+            for (ProductoDTO producto : productos.getContent()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("id", producto.getIdProducto());
+                item.put("nombre", producto.getNombre());
+                item.put("descripcion", producto.getDescripcion());
+                item.put("precio", producto.getPrecio());
+                item.put("stock", producto.getStock());
+                item.put("tipo", "productos");
+                item.put("categoria", producto.getNombreCategoria() != null ? 
+                        producto.getNombreCategoria() : "Sin categoría");
+                item.put("icon", determinarIconoProducto(producto));
+                item.put("disponible", producto.isDisponible());
+                items.add(item);
+            }
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("productos", items);
+            response.put("totalElements", productos.getTotalElements());
+            response.put("totalPages", productos.getTotalPages());
+            response.put("currentPage", page);
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Error obteniendo productos: ", e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", "Error interno del servidor");
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+    
+    /**
+     * Obtiene solo servicios en formato para JavaScript.
+     */
+    @GetMapping("/servicios")  
+    public ResponseEntity<?> obtenerServiciosParaFrontend(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size,
+            @RequestParam(required = false) String busqueda,
+            @RequestParam(required = false) Long categoria,
+            @RequestParam(required = false) BigDecimal precioMin,
+            @RequestParam(required = false) BigDecimal precioMax) {
+        
+        try {
+            logger.info("Obteniendo servicios para frontend - página: {}, tamaño: {}", page, size);
+            
+            Pageable pageable = PageRequest.of(page, size, Sort.by("nombre").ascending());
+            
+            Page<ServicioDTO> servicios = servicioService.buscarServiciosDisponibles(
+                busqueda, categoria, precioMin, precioMax, pageable);
+            
+            List<Map<String, Object>> items = new java.util.ArrayList<>();
+            
+            for (ServicioDTO servicio : servicios.getContent()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("id", servicio.getIdServicio());
+                item.put("nombre", servicio.getNombre());
+                item.put("descripcion", servicio.getDescripcion());
+                item.put("precio", servicio.getPrecio());
+                item.put("duracion", servicio.getDuracion());
+                item.put("tipo", "servicios");
+                item.put("categoria", servicio.getNombreCategoria() != null ? 
+                        servicio.getNombreCategoria() : "Sin categoría");
+                item.put("icon", determinarIconoServicio(servicio));
+                item.put("disponible", servicio.isDisponible());
+                items.add(item);
+            }
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("servicios", items);
+            response.put("totalElements", servicios.getTotalElements());
+            response.put("totalPages", servicios.getTotalPages());
+            response.put("currentPage", page);
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Error obteniendo servicios: ", e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", "Error interno del servidor");
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+    
+    /**
+     * Determina el icono apropiado para un producto basado en su categoría.
+     */
+    private String determinarIconoProducto(ProductoDTO producto) {
+        String categoria = producto.getNombreCategoria();
+        if (categoria == null) return "fas fa-box";
+        
+        categoria = categoria.toLowerCase();
+        if (categoria.contains("suplemento") || categoria.contains("proteína") || categoria.contains("creatina")) {
+            return "fas fa-flask";
+        } else if (categoria.contains("equipamiento") || categoria.contains("equipo") || categoria.contains("mancuerna")) {
+            return "fas fa-dumbbell";
+        } else if (categoria.contains("banca") || categoria.contains("mobiliario")) {
+            return "fas fa-couch";
+        } else if (categoria.contains("pill") || categoria.contains("medicament") || categoria.contains("vitamina")) {
+            return "fas fa-pills";
+        }
+        return "fas fa-box";
+    }
+    
+    /**
+     * Determina el icono apropiado para un servicio basado en su categoría.
+     */
+    private String determinarIconoServicio(ServicioDTO servicio) {
+        String categoria = servicio.getNombreCategoria();
+        if (categoria == null) return "fas fa-cogs";
+        
+        categoria = categoria.toLowerCase();
+        if (categoria.contains("entrenamiento") || categoria.contains("personal")) {
+            return "fas fa-user-tie";
+        } else if (categoria.contains("yoga") || categoria.contains("relajación")) {
+            return "fas fa-leaf";
+        } else if (categoria.contains("nutrición") || categoria.contains("nutricional")) {
+            return "fas fa-apple-alt";
+        } else if (categoria.contains("crossfit") || categoria.contains("funcional") || categoria.contains("intenso")) {
+            return "fas fa-fire";
+        } else if (categoria.contains("clases") || categoria.contains("grupal")) {
+            return "fas fa-users";
+        }
+        return "fas fa-cogs";
+    }
 }

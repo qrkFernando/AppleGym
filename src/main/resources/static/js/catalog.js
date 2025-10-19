@@ -34,24 +34,43 @@ async function loadCatalogData() {
     showLoading();
     
     try {
-        console.log('Cargando catalogo completo...');
+        console.log('🔄 Conectando con la base de datos MySQL...');
         
-        // Intentar cargar datos reales de la API
-        const apiSuccess = await loadRealData();
+        const success = await loadRealData();
         
-        if (!apiSuccess) {
-            console.log('API no disponible, cargando datos de ejemplo...');
-            loadSampleData();
+        if (success) {
+            showNotification('✅ Datos cargados desde tu base de datos MySQL', 'success');
         }
         
         renderCatalog();
-        console.log('Catalogo completo cargado exitosamente');
+        console.log('✅ Catálogo cargado exitosamente desde la base de datos');
         
     } catch (error) {
-        console.error('Error cargando catalogo:', error);
-        loadSampleData();
-        renderCatalog();
-        showNotification('Cargando datos de demostracion', 'info');
+        console.error('❌ Error crítico:', error);
+        showNotification('❌ Error: No se puede conectar con la base de datos MySQL. Verifica que el servidor esté ejecutándose.', 'error');
+        
+        // Mostrar mensaje en la interfaz
+        const catalogGrid = document.getElementById('catalog-grid');
+        if (catalogGrid) {
+            catalogGrid.innerHTML = `
+                <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 3rem; background: #ffebee; border-radius: 8px; margin: 2rem 0;">
+                    <i class="fas fa-database" style="font-size: 4rem; color: #f44336; margin-bottom: 1rem;"></i>
+                    <h3 style="color: #f44336; margin-bottom: 1rem;">No se puede conectar con la base de datos</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Verifica que:</p>
+                    <ul style="text-align: left; max-width: 400px; margin: 0 auto; color: #666;">
+                        <li>MySQL esté ejecutándose</li>
+                        <li>La base de datos 'applegym' exista</li>
+                        <li>Las credenciales sean correctas</li>
+                        <li>El servidor Spring Boot esté funcionando</li>
+                    </ul>
+                    <div style="margin-top: 1rem;">
+                        <button onclick="location.reload()" class="btn-primary">
+                            <i class="fas fa-redo"></i> Reintentar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
     } finally {
         hideLoading();
     }

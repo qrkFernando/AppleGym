@@ -35,24 +35,24 @@ async function loadCatalogData() {
     showLoading();
     
     try {
-        console.log('Cargando catalogo...');
+        console.log('🔄 Cargando catálogo desde la base de datos MySQL...');
         
-        // Intentar cargar datos reales de la API
-        const apiSuccess = await loadRealData();
+        const success = await loadRealData();
         
-        if (!apiSuccess) {
-            console.log('API no disponible, cargando datos de ejemplo...');
-            loadSampleData();
+        if (success) {
+            showNotification('✅ Catálogo cargado desde tu base de datos MySQL', 'success');
         }
         
         renderCatalog();
-        console.log('Catalogo cargado exitosamente');
+        console.log('✅ Catálogo cargado exitosamente desde la base de datos');
         
     } catch (error) {
-        console.error('Error cargando catalogo:', error);
-        loadSampleData();
+        console.error('❌ Error crítico:', error);
+        showNotification('❌ Error: No se puede conectar con la base de datos MySQL', 'error');
+        
+        // Establecer array vacío
+        products = [];
         renderCatalog();
-        showNotification('Cargando datos de demostracion', 'info');
     } finally {
         hideLoading();
     }

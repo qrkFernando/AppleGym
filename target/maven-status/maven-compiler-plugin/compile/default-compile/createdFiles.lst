@@ -12,6 +12,7 @@ com\applegym\dto\ClienteRegistroDTO.class
 com\applegym\repository\ProductoRepository.class
 com\applegym\repository\ClienteRepository.class
 com\applegym\dto\LoginRequest.class
+com\applegym\repository\PagoRepository.class
 com\applegym\security\JwtTokenProvider.class
 com\applegym\exception\InvalidDataException.class
 com\applegym\service\CarritoService.class
@@ -23,6 +24,8 @@ com\applegym\service\ClienteService.class
 com\applegym\entity\Venta$EstadoVenta.class
 com\applegym\controller\TestController.class
 com\applegym\dto\CategoriaDTO.class
+com\applegym\repository\ComprobanteRepository.class
+com\applegym\service\impl\PdfServiceImpl.class
 com\applegym\entity\Pago$TipoPago.class
 com\applegym\entity\Pago.class
 com\applegym\security\CustomUserDetailsService.class
@@ -57,6 +60,7 @@ com\applegym\dto\CarritoDTO.class
 com\applegym\repository\ServicioRepository.class
 com\applegym\AppleGymApplication.class
 com\applegym\exception\ResourceNotFoundException.class
+com\applegym\service\PdfService.class
 com\applegym\repository\VentaRepository.class
 com\applegym\service\impl\CategoriaServiceImpl.class
 com\applegym\dto\DetalleCarritoDTO.class

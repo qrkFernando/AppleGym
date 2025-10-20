@@ -101,10 +101,15 @@ function loadUserData() {
     if (userData) {
         try {
             currentUser = JSON.parse(userData);
+            console.log('Usuario cargado desde localStorage:', currentUser);
+            console.log('Token disponible:', currentUser.token ? 'Sí - ' + currentUser.token.substring(0, 20) + '...' : 'No');
             updateNavbar();
         } catch (e) {
+            console.error('Error cargando datos de usuario:', e);
             localStorage.removeItem('userData');
         }
+    } else {
+        console.log('No hay datos de usuario en localStorage');
     }
 }
 

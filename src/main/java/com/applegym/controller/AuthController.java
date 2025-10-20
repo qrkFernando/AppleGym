@@ -76,17 +76,35 @@ public class AuthController {
             ClienteDTO clienteDTO = clienteService.buscarClientePorEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
             
-            // Crear respuesta de login exitoso
-            LoginResponse loginResponse = new LoginResponse(jwt, "Bearer", clienteDTO);
+            // Crear respuesta en formato compatible con frontend
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Login exitoso");
+            response.put("token", jwt);  // Token en nivel superior
+            response.put("tokenType", "Bearer");
             
-            logger.info("Inicio de sesión exitoso para usuario: {}", loginRequest.getEmail());
+            // Agregar token al objeto cliente también
+            Map<String, Object> clienteData = new HashMap<>();
+            clienteData.put("id", clienteDTO.getIdCliente());
+            clienteData.put("idCliente", clienteDTO.getIdCliente());
+            clienteData.put("email", clienteDTO.getEmail());
+            clienteData.put("nombre", clienteDTO.getNombreCliente() != null ? clienteDTO.getNombreCliente() : "");
+            clienteData.put("nombreCliente", clienteDTO.getNombreCliente() != null ? clienteDTO.getNombreCliente() : "");
+            clienteData.put("telefono", clienteDTO.getTelefono() != null ? clienteDTO.getTelefono() : "");
+            clienteData.put("direccion", clienteDTO.getDireccion() != null ? clienteDTO.getDireccion() : "");
+            clienteData.put("token", jwt);  // Token incluido en el objeto cliente
             
-            return ResponseEntity.ok(loginResponse);
+            response.put("cliente", clienteData);
+            
+            logger.info("Inicio de sesión exitoso para usuario: {} - Token generado", loginRequest.getEmail());
+            
+            return ResponseEntity.ok(response);
             
         } catch (AuthenticationException e) {
             logger.warn("Fallo en autenticación para usuario: {}", loginRequest.getEmail());
             
             Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
             errorResponse.put("error", "Credenciales inválidas");
             errorResponse.put("message", "Email o contraseña incorrectos");
             errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
@@ -136,9 +154,9 @@ public class AuthController {
             
             // Crear respuesta de registro exitoso (sin token automático)
             Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
             response.put("message", "Cliente registrado exitosamente");
             response.put("cliente", clienteRegistrado);
-            response.put("status", "success");
             
             logger.info("Cliente registrado exitosamente con ID: {}", clienteRegistrado.getIdCliente());
             

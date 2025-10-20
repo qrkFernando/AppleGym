@@ -13,22 +13,25 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <i class="fas fa-dumbbell"></i>
+                <img src="images/logo-gym.png" style="width: 60px; margin-right: 1rem;">
                 <span>AppleGym</span>
             </div>
             <div class="nav-menu" id="nav-menu">
                 <a href="index.html" class="nav-link">Inicio</a>
                 <a href="catalogo.html" class="nav-link active">Catálogo</a>
+                
+                <!-- Carrito siempre visible -->
+                <div class="cart-icon" onclick="toggleCart()" style="cursor: pointer; position: relative; margin: 0 1rem;">
+                    <i class="fas fa-shopping-cart" style="font-size: 1.5rem;"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+                
                 <div class="nav-auth">
                     <button class="btn-login" onclick="showLogin()">Iniciar Sesión</button>
                     <button class="btn-register" onclick="showRegister()">Registrarse</button>
                 </div>
                 <div class="nav-user" id="nav-user" style="display: none;">
                     <span id="user-name">Usuario</span>
-                    <div class="cart-icon" onclick="toggleCart()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cart-count">0</span>
-                    </div>
                     <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
                 </div>
             </div>
@@ -46,9 +49,6 @@
             <h1><i class="fas fa-th-large"></i> Catálogo Completo</h1>
             <p>Explora toda nuestra gama de productos y servicios</p>
             <nav class="breadcrumb">
-                <a href="index.html">Inicio</a>
-                <span>/</span>
-                <span>Catálogo</span>
             </nav>
         </div>
     </section>

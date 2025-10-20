@@ -99,10 +99,6 @@ body {
     color: var(--primary-green);
 }
 
-.nav-brand i {
-    margin-right: 8px;
-    font-size: 1.8rem;
-}
 
 .nav-menu {
     display: flex;

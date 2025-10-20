@@ -2,16 +2,24 @@ package com.applegym.controller;
 
 import com.applegym.dto.VentaDTO;
 import com.applegym.service.VentaService;
+import com.applegym.service.PdfService;
 import com.applegym.security.JwtTokenProvider;
+import com.applegym.entity.Venta;
+import com.applegym.repository.VentaRepository;
+import com.applegym.exception.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 /**
@@ -31,6 +39,12 @@ public class VentaController {
     
     @Autowired
     private VentaService ventaService;
+    
+    @Autowired
+    private PdfService pdfService;
+    
+    @Autowired
+    private VentaRepository ventaRepository;
     
     @Autowired
     private JwtTokenProvider tokenProvider;
@@ -97,6 +111,50 @@ public class VentaController {
     }
     
     /**
+     * Descargar comprobante en PDF
+     */
+    @GetMapping("/comprobante/{ventaId}/pdf")
+    public ResponseEntity<?> descargarComprobantePDF(@PathVariable Long ventaId, HttpServletRequest httpRequest) {
+        try {
+            String token = extractTokenFromRequest(httpRequest);
+            if (token == null) {
+                return ResponseEntity.status(401).body(Map.of("error", "Token requerido para descargar el comprobante"));
+            }
+            
+            String email = tokenProvider.getUsernameFromToken(token);
+            
+            // Buscar la venta y validar que pertenece al cliente
+            Venta venta = ventaRepository.findById(ventaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada"));
+            
+            if (!venta.getCliente().getEmail().equals(email)) {
+                return ResponseEntity.status(403).body(Map.of("error", "No tiene permisos para acceder a este comprobante"));
+            }
+            
+            // Generar PDF
+            ByteArrayOutputStream pdfStream = pdfService.generarComprobantePDF(venta);
+            
+            // Configurar headers para descarga
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            String filename = String.format("Comprobante_%s.pdf", venta.getNumeroVenta());
+            headers.setContentDispositionFormData("attachment", filename);
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            
+            logger.info("PDF generado para venta ID: {}, Cliente: {}", ventaId, email);
+            
+            return new ResponseEntity<>(pdfStream.toByteArray(), headers, HttpStatus.OK);
+            
+        } catch (ResourceNotFoundException e) {
+            logger.error("Venta no encontrada: {}", e.getMessage());
+            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            logger.error("Error generando PDF para venta ID {}: {}", ventaId, e.getMessage(), e);
+            return ResponseEntity.status(500).body(Map.of("error", "Error al generar el PDF: " + e.getMessage()));
+        }
+    }
+    
+    /**
      * Obtener métodos de pago disponibles
      */
     @GetMapping("/metodos-pago")
@@ -104,9 +162,7 @@ public class VentaController {
         return ResponseEntity.ok(Map.of(
             "metodosDisponibles", new Object[]{
                 Map.of("id", "TARJETA_CREDITO", "nombre", "Tarjeta de Crédito", "icon", "fas fa-credit-card"),
-                Map.of("id", "TARJETA_DEBITO", "nombre", "Tarjeta de Débito", "icon", "fas fa-credit-card"),
-                Map.of("id", "EFECTIVO", "nombre", "Efectivo", "icon", "fas fa-money-bill"),
-                Map.of("id", "TRANSFERENCIA", "nombre", "Transferencia Bancaria", "icon", "fas fa-university")
+                Map.of("id", "TARJETA_DEBITO", "nombre", "Tarjeta de Débito", "icon", "fas fa-credit-card")
             }
         ));
     }
@@ -114,9 +170,7 @@ public class VentaController {
     private boolean isValidPaymentMethod(String metodo) {
         return metodo != null && (
             metodo.equals("TARJETA_CREDITO") ||
-            metodo.equals("TARJETA_DEBITO") ||
-            metodo.equals("EFECTIVO") ||
-            metodo.equals("TRANSFERENCIA")
+            metodo.equals("TARJETA_DEBITO")
         );
     }
     

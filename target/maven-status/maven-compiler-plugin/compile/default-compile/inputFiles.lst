@@ -2,6 +2,7 @@ D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\service\impl\ServicioServiceImp
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\controller\HomeController.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\service\impl\ProductoServiceImpl.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\entity\Comprobante.java
+D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\repository\PagoRepository.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\config\ModelMapperConfig.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\dto\CategoriaDTO.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\dto\LoginRequest.java
@@ -28,6 +29,7 @@ D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\controller\SimpleProductosContr
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\exception\InvalidDataException.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\security\JwtAuthenticationFilter.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\exception\ResourceNotFoundException.java
+D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\service\impl\PdfServiceImpl.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\repository\CarritoRepository.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\entity\Pago.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\dto\CarritoDTO.java
@@ -42,8 +44,10 @@ D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\repository\VentaRepository.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\repository\ClienteRepository.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\service\VentaService.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\service\CarritoService.java
+D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\service\PdfService.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\controller\TestControllerFull.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\service\ProductoService.java
+D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\repository\ComprobanteRepository.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\security\JwtTokenProvider.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\entity\Carrito.java
 D:\ATAHUALPA\AppleGym\src\main\java\com\applegym\entity\Categoria.java

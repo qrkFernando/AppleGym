@@ -77,7 +77,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Orígenes permitidos (ajustar según el entorno)
+        // Orígenes permitidos - Usar allowedOriginPatterns con allowCredentials
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         
         // Métodos HTTP permitidos
@@ -86,8 +86,8 @@ public class SecurityConfig {
         // Headers permitidos
         configuration.setAllowedHeaders(Arrays.asList("*"));
         
-        // Permitir credenciales
-        configuration.setAllowCredentials(true);
+        // Permitir credenciales (sin setAllowedOrigins con "*")
+        configuration.setAllowCredentials(false);  // Cambiado a false para evitar conflicto
         
         // Exponer headers de autorización
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));

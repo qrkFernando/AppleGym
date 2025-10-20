@@ -13,23 +13,28 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <i class="fas fa-dumbbell"></i>
+                <img src="images/logo-gym.png" style="width: 60px; margin-right: 15px;">
                 <span>AppleGym</span>
             </div>
             <div class="nav-menu" id="nav-menu">
                 <a href="index.html" class="nav-link">Inicio</a>
                 <a href="catalogo.html" class="nav-link">Catálogo</a>
                 
+                <!-- Carrito siempre visible -->
+                <div class="cart-icon" onclick="toggleCart()" style="cursor: pointer; position: relative; margin: 0 1rem;">
+                    <i class="fas fa-shopping-cart" style="font-size: 1.5rem;"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+                
+                <!-- Botones de autenticación (ocultos cuando hay usuario) -->
                 <div class="nav-auth">
                     <button class="btn-login" onclick="showLogin()">Iniciar Sesión</button>
                     <button class="btn-register" onclick="showRegister()">Registrarse</button>
                 </div>
+                
+                <!-- Información de usuario (oculta por defecto) -->
                 <div class="nav-user" id="nav-user" style="display: none;">
                     <span id="user-name">Usuario</span>
-                    <div class="cart-icon" onclick="toggleCart()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cart-count">0</span>
-                    </div>
                     <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
                 </div>
             </div>

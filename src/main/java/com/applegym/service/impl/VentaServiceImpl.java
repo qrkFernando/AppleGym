@@ -41,6 +41,12 @@ public class VentaServiceImpl implements VentaService {
     private CarritoRepository carritoRepository;
     
     @Autowired
+    private ProductoRepository productoRepository;
+    
+    @Autowired
+    private ServicioRepository servicioRepository;
+    
+    @Autowired
     private CarritoService carritoService;
     
     @Autowired
@@ -80,6 +86,15 @@ public class VentaServiceImpl implements VentaService {
             detalleVenta.setPrecioUnitario(detalleCarrito.getPrecioUnitario());
             detalleVenta.setSubtotal(detalleCarrito.getSubtotal());
             
+            // Asociar producto o servicio según corresponda
+            if ("PRODUCTO".equals(detalleCarrito.getTipo())) {
+                productoRepository.findById(detalleCarrito.getIdItem())
+                    .ifPresent(detalleVenta::setProducto);
+            } else if ("SERVICIO".equals(detalleCarrito.getTipo())) {
+                servicioRepository.findById(detalleCarrito.getIdItem())
+                    .ifPresent(detalleVenta::setServicio);
+            }
+            
             venta.getDetalles().add(detalleVenta);
         }
         
@@ -97,8 +112,9 @@ public class VentaServiceImpl implements VentaService {
         Comprobante comprobante = new Comprobante();
         comprobante.setVenta(venta);
         comprobante.setFechaEmision(LocalDateTime.now());
-        comprobante.setTipoComprobante("FACTURA_DIGITAL");
-        comprobante.setArchivoComprobante("comprobante-" + System.currentTimeMillis() + ".pdf");
+        comprobante.setTipoComprobante("BOLETA");
+        comprobante.setSerieComprobante("001");
+        comprobante.setEstadoComprobante("GENERADO");
         
         venta.setComprobante(comprobante);
         

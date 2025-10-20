@@ -70,6 +70,7 @@ public class SecurityConfig {
     
     /**
      * Configuración de CORS para permitir requests del frontend.
+     * Configuración permisiva para desarrollo.
      * 
      * @return CorsConfigurationSource configurado
      */
@@ -77,17 +78,14 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Orígenes permitidos - Usar allowedOriginPatterns con allowCredentials
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        // Permitir todos los orígenes para desarrollo
+        configuration.setAllowedOrigins(Arrays.asList("*"));
         
         // Métodos HTTP permitidos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         
         // Headers permitidos
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        
-        // Permitir credenciales (sin setAllowedOrigins con "*")
-        configuration.setAllowCredentials(false);  // Cambiado a false para evitar conflicto
         
         // Exponer headers de autorización
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));

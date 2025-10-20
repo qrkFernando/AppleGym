@@ -51,19 +51,14 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * Configura CORS para permitir requests del frontend.
+     * Configuración permisiva para desarrollo.
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(false);  // Cambiado a false para evitar conflicto
-                
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
-                .allowCredentials(false);  // Cambiado a false para evitar conflicto
+                .maxAge(3600);
     }
 }

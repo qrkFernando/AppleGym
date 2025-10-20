@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +33,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/ventas")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class VentaController {
     
     private static final Logger logger = LoggerFactory.getLogger(VentaController.class);
@@ -114,6 +114,7 @@ public class VentaController {
      * Descargar comprobante en PDF
      */
     @GetMapping("/comprobante/{ventaId}/pdf")
+    @Transactional(readOnly = true)
     public ResponseEntity<?> descargarComprobantePDF(@PathVariable Long ventaId, HttpServletRequest httpRequest) {
         try {
             String token = extractTokenFromRequest(httpRequest);
@@ -137,7 +138,8 @@ public class VentaController {
             // Configurar headers para descarga
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            String filename = String.format("Comprobante_%s.pdf", venta.getNumeroVenta());
+            String filename = String.format("Comprobante_%s.pdf", 
+                venta.getNumeroVenta() != null ? venta.getNumeroVenta() : "VT" + venta.getIdVenta());
             headers.setContentDispositionFormData("attachment", filename);
             headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
             

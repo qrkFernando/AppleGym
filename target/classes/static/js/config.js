@@ -6,8 +6,8 @@ console.log('AppleGym Config cargando...');
 const API_BASE_URL = '/api';
 const API_ENDPOINTS = {
     auth: {
-        register: `${API_BASE_URL}/test-full/register-simple`,
-        login: `${API_BASE_URL}/test-full/login-simple`
+        register: `${API_BASE_URL}/auth/register`,
+        login: `${API_BASE_URL}/auth/login`
     },
     test: `${API_BASE_URL}/test-full`,
     catalogo: {

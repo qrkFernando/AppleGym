@@ -29,6 +29,18 @@ async function handleLogin(e) {
       currentUser = result.cliente;
       localStorage.setItem("userData", JSON.stringify(result.cliente));
 
+      console.log('Usuario logueado:', result.cliente);
+      console.log('Rol del usuario:', result.cliente.rol);
+      
+      // Redirigir según el rol ANTES de cualquier otra acción
+      if (result.cliente.rol === 'ADMIN') {
+        console.log('✅ ADMIN detectado - Redirigiendo a dashboard...');
+        hideLoading();
+        window.location.href = 'admin-dashboard.html';
+        return; // Importante: salir aquí
+      }
+      
+      // Solo si NO es admin, hacer las demás acciones
       updateNavbar();
       closeModal("login-modal");
       showNotification(

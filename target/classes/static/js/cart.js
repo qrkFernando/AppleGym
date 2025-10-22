@@ -380,6 +380,16 @@ async function confirmPayment() {
         return;
     }
     
+    // Verificar si el token está expirado
+    if (isTokenExpired(currentUser.token)) {
+        console.log('Token expirado detectado');
+        closePaymentModal();
+        logout();
+        showNotification('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'error');
+        showLogin();
+        return;
+    }
+    
     console.log('Procesando pago con usuario:', currentUser);
     console.log('Token disponible:', currentUser.token ? 'Sí' : 'No');
     
@@ -407,6 +417,15 @@ async function confirmPayment() {
         console.log('Respuesta del servidor:', data);
         
         if (!response.ok) {
+            // Si el error es por token expirado, cerrar sesión
+            if (data.error && data.error.includes('JWT expired')) {
+                hideLoading();
+                closePaymentModal();
+                logout();
+                showNotification('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'error');
+                showLogin();
+                return;
+            }
             throw new Error(data.error || 'Error al procesar la venta');
         }
         
@@ -439,6 +458,15 @@ async function sincronizarCarritoConBackend() {
         throw new Error('Usuario no autenticado');
     }
     
+    // Verificar si el token está expirado
+    if (isTokenExpired(currentUser.token)) {
+        console.log('Token expirado, cerrando sesión...');
+        logout();
+        showNotification('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'error');
+        showLogin();
+        throw new Error('Token expirado');
+    }
+    
     if (cart.length === 0) {
         throw new Error('El carrito está vacío');
     }
@@ -449,8 +477,29 @@ async function sincronizarCarritoConBackend() {
     for (const item of cart) {
         try {
             // Determinar el tipo y el ID correcto
-            const tipo = item.idProducto ? 'producto' : 'servicio';
+            let tipo = item.tipo || (item.idProducto ? 'producto' : 'servicio');
+            
+            // Normalizar el tipo (convertir plural a singular para el backend)
+            if (tipo === 'productos') tipo = 'producto';
+            if (tipo === 'servicios') tipo = 'servicio';
+            
             const itemId = item.idProducto || item.idServicio || item.id;
+            
+            console.log('Enviando item al backend:', {
+                item: item,
+                tipoOriginal: item.tipo,
+                tipoNormalizado: tipo,
+                itemId: itemId,
+                cantidad: item.quantity
+            });
+            
+            const requestData = {
+                productoId: itemId,
+                tipo: tipo,
+                cantidad: item.quantity
+            };
+            
+            console.log('Request data:', JSON.stringify(requestData));
             
             const response = await fetch(`${API_BASE_URL}/carrito/agregar`, {
                 method: 'POST',
@@ -458,21 +507,26 @@ async function sincronizarCarritoConBackend() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${currentUser.token}`
                 },
-                body: JSON.stringify({
-                    productoId: itemId,
-                    tipo: tipo,
-                    cantidad: item.quantity
-                })
+                body: JSON.stringify(requestData)
             });
             
             if (!response.ok) {
                 const error = await response.json();
                 console.error('Error agregando item al carrito:', error);
+                
+                // Si el error es por token expirado, cerrar sesión
+                if (error.error && error.error.includes('JWT expired')) {
+                    logout();
+                    showNotification('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'error');
+                    showLogin();
+                    throw new Error('Token expirado');
+                }
             } else {
                 console.log('Item agregado al carrito backend:', item.nombre);
             }
         } catch (error) {
             console.error('Error en sincronización de item:', error);
+            throw error;
         }
     }
     
@@ -557,6 +611,42 @@ function closeConfirmationModal() {
     }
     // Redirigir a la página principal o catálogo
     window.location.href = 'catalogo.html';
+}
+
+// Función para decodificar el token JWT y verificar expiración
+function isTokenExpired(token) {
+    if (!token) return true;
+    
+    try {
+        // Decodificar el payload del JWT (parte del medio)
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        
+        // Verificar si tiene fecha de expiración
+        if (!payload.exp) return false;
+        
+        // Comparar con la fecha actual (exp está en segundos, Date.now() en milisegundos)
+        const now = Date.now() / 1000;
+        return payload.exp < now;
+    } catch (error) {
+        console.error('Error verificando expiración del token:', error);
+        return true;
+    }
+}
+
+// Verificar el token al cargar la página
+function checkTokenOnLoad() {
+    if (currentUser && currentUser.token) {
+        if (isTokenExpired(currentUser.token)) {
+            console.log('Token expirado detectado al cargar la página');
+            logout();
+            showNotification('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'warning');
+        }
+    }
+}
+
+// Verificar token al cargar
+if (typeof currentUser !== 'undefined') {
+    checkTokenOnLoad();
 }
 
 console.log('AppleGym Cart cargado correctamente!');

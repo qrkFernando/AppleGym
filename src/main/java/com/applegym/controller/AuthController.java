@@ -1,13 +1,8 @@
 package com.applegym.controller;
 
-import com.applegym.dto.ClienteDTO;
-import com.applegym.dto.ClienteRegistroDTO;
-import com.applegym.dto.LoginRequest;
-import com.applegym.dto.LoginResponse;
-import com.applegym.security.JwtTokenProvider;
-import com.applegym.service.ClienteService;
+import java.util.HashMap;
+import java.util.Map;
 
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +12,19 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.applegym.dto.ClienteDTO;
+import com.applegym.dto.ClienteRegistroDTO;
+import com.applegym.dto.LoginRequest;
+import com.applegym.security.JwtTokenProvider;
+import com.applegym.service.ClienteService;
+
+import jakarta.validation.Valid;
 
 /**
  * Controlador para autenticación y registro de usuarios.
@@ -91,6 +95,7 @@ public class AuthController {
             clienteData.put("nombreCliente", clienteDTO.getNombreCliente() != null ? clienteDTO.getNombreCliente() : "");
             clienteData.put("telefono", clienteDTO.getTelefono() != null ? clienteDTO.getTelefono() : "");
             clienteData.put("direccion", clienteDTO.getDireccion() != null ? clienteDTO.getDireccion() : "");
+            clienteData.put("rol", clienteDTO.getRol() != null ? clienteDTO.getRol() : "CLIENTE");
             clienteData.put("token", jwt);  // Token incluido en el objeto cliente
             
             response.put("cliente", clienteData);
@@ -136,18 +141,6 @@ public class AuthController {
                 
                 return ResponseEntity.badRequest().body(errorResponse);
             }
-            
-            // Validar que las contraseñas coincidan
-            if (!clienteRegistroDTO.isPasswordMatch()) {
-                Map<String, Object> errorResponse = new HashMap<>();
-                errorResponse.put("error", "Contraseñas no coinciden");
-                errorResponse.put("message", "La contraseña y su confirmación deben ser iguales");
-                errorResponse.put("field", "confirmPassword");
-                errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
-                
-                return ResponseEntity.badRequest().body(errorResponse);
-            }
-            
             // Registrar cliente
             ClienteDTO clienteRegistrado = clienteService.registrarCliente(clienteRegistroDTO);
             
@@ -213,6 +206,37 @@ public class AuthController {
             errorResponse.put("message", "Error validando token");
             
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        }
+    }
+    
+    /**
+     * Endpoint temporal para generar hash de contraseña.
+     * SOLO PARA DESARROLLO - Eliminar en producción.
+     */
+    @PostMapping("/generate-hash")
+    public ResponseEntity<?> generatePasswordHash(@RequestBody Map<String, String> request) {
+        try {
+            String password = request.get("password");
+            if (password == null || password.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Password requerido"));
+            }
+            
+            org.springframework.security.crypto.password.PasswordEncoder encoder = 
+                new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+            String hash = encoder.encode(password);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("password", password);
+            response.put("hash", hash);
+            response.put("sqlUpdate", String.format(
+                "UPDATE cliente SET password = '%s' WHERE email = 'applegym@admin.com';", hash));
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Error generando hash: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", e.getMessage()));
         }
     }
 }

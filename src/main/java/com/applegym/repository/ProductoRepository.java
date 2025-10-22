@@ -161,9 +161,14 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     
     /**
      * Obtiene el valor total del inventario.
-     * 
+     *
      * @return Valor total del inventario (precio * stock)
      */
     @Query("SELECT SUM(p.precio * p.stock) FROM Producto p WHERE p.activo = true")
     BigDecimal calcularValorTotalInventario();
+    
+    /**
+     * Cuenta productos por estado activo.
+     */
+    Long countByActivo(Boolean activo);
 }

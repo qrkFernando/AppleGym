@@ -307,45 +307,65 @@ public class CatalogoController {
             @RequestParam(required = false) BigDecimal precioMax) {
         
         try {
-            logger.info("Obteniendo catálogo completo para frontend");
+            logger.info("Obteniendo catálogo completo para frontend - página: {}, tamaño: {}", page, size);
             
-            // Crear respuesta simple para probar
+            Pageable pageable = PageRequest.of(page, size, Sort.by("nombre").ascending());
+            
+            // Cargar productos reales de la base de datos
+            Page<ProductoDTO> productos = productoService.buscarProductosDisponibles(
+                busqueda, categoria, precioMin, precioMax, pageable);
+            
+            // Cargar servicios reales de la base de datos
+            Page<ServicioDTO> servicios = servicioService.buscarServiciosDisponibles(
+                busqueda, categoria, precioMin, precioMax, pageable);
+            
             List<Map<String, Object>> items = new java.util.ArrayList<>();
             
-            // Agregar algunos productos hardcodeados temporalmente
-            Map<String, Object> producto1 = new HashMap<>();
-            producto1.put("id", 1L);
-            producto1.put("nombre", "Proteína Whey");
-            producto1.put("descripcion", "Proteína de alta calidad");
-            producto1.put("precio", 45.99);
-            producto1.put("stock", 100);
-            producto1.put("tipo", "productos");
-            producto1.put("categoria", "Suplementos");
-            producto1.put("icon", "fas fa-flask");
-            producto1.put("disponible", true);
-            items.add(producto1);
+            // Agregar productos
+            for (ProductoDTO producto : productos.getContent()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("id", producto.getIdProducto());
+                item.put("nombre", producto.getNombre());
+                item.put("descripcion", producto.getDescripcion());
+                item.put("precio", producto.getPrecio());
+                item.put("stock", producto.getStock());
+                item.put("tipo", "producto");
+                item.put("categoria", producto.getNombreCategoria() != null ? 
+                        producto.getNombreCategoria() : "Sin categoría");
+                item.put("icon", determinarIconoProducto(producto));
+                item.put("disponible", producto.isDisponible());
+                items.add(item);
+            }
             
-            Map<String, Object> servicio1 = new HashMap<>();
-            servicio1.put("id", 1L);
-            servicio1.put("nombre", "Entrenamiento Personal");
-            servicio1.put("descripcion", "Sesión personalizada");
-            servicio1.put("precio", 65.00);
-            servicio1.put("duracion", 60);
-            servicio1.put("tipo", "servicios");
-            servicio1.put("categoria", "Entrenamiento");
-            servicio1.put("icon", "fas fa-user-tie");
-            servicio1.put("disponible", true);
-            items.add(servicio1);
+            // Agregar servicios
+            for (ServicioDTO servicio : servicios.getContent()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("id", servicio.getIdServicio());
+                item.put("nombre", servicio.getNombre());
+                item.put("descripcion", servicio.getDescripcion());
+                item.put("precio", servicio.getPrecio());
+                item.put("duracion", servicio.getDuracion());
+                item.put("tipo", "servicio");
+                item.put("categoria", servicio.getNombreCategoria() != null ? 
+                        servicio.getNombreCategoria() : "Sin categoría");
+                item.put("icon", determinarIconoServicio(servicio));
+                item.put("disponible", servicio.isDisponible());
+                items.add(item);
+            }
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("items", items);
-            response.put("totalElements", 2L);
-            response.put("totalPages", 1);
+            response.put("totalProductos", productos.getTotalElements());
+            response.put("totalServicios", servicios.getTotalElements());
+            response.put("totalElements", productos.getTotalElements() + servicios.getTotalElements());
+            response.put("totalPages", Math.max(productos.getTotalPages(), servicios.getTotalPages()));
             response.put("currentPage", page);
-            response.put("message", "Datos de prueba - conectando con base de datos...");
+            response.put("source", "MySQL Database");
             
-            logger.info("Respuesta preparada con {} items", items.size());
+            logger.info("Catálogo completo cargado: {} productos, {} servicios", 
+                       productos.getTotalElements(), servicios.getTotalElements());
+            
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
@@ -387,7 +407,7 @@ public class CatalogoController {
                 item.put("descripcion", producto.getDescripcion());
                 item.put("precio", producto.getPrecio());
                 item.put("stock", producto.getStock());
-                item.put("tipo", "productos");
+                item.put("tipo", "producto");
                 item.put("categoria", producto.getNombreCategoria() != null ? 
                         producto.getNombreCategoria() : "Sin categoría");
                 item.put("icon", determinarIconoProducto(producto));
@@ -442,7 +462,7 @@ public class CatalogoController {
                 item.put("descripcion", servicio.getDescripcion());
                 item.put("precio", servicio.getPrecio());
                 item.put("duracion", servicio.getDuracion());
-                item.put("tipo", "servicios");
+                item.put("tipo", "servicio");
                 item.put("categoria", servicio.getNombreCategoria() != null ? 
                         servicio.getNombreCategoria() : "Sin categoría");
                 item.put("icon", determinarIconoServicio(servicio));

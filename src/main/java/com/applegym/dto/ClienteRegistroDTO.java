@@ -27,8 +27,6 @@ public class ClienteRegistroDTO {
     @Size(min = 8, max = 255, message = "La contraseña debe tener entre 8 y 255 caracteres")
     private String password;
     
-    @NotBlank(message = "La confirmación de contraseña es obligatoria")
-    private String confirmPassword;
     
     @Size(max = 15, message = "El teléfono no puede exceder 15 caracteres")
     private String telefono;
@@ -44,15 +42,10 @@ public class ClienteRegistroDTO {
         this.nombreCliente = nombreCliente;
         this.email = email;
         this.password = password;
-        this.confirmPassword = confirmPassword;
         this.telefono = telefono;
         this.direccion = direccion;
     }
     
-    // Métodos de validación
-    public boolean isPasswordMatch() {
-        return password != null && password.equals(confirmPassword);
-    }
     
     // Getters y Setters
     public String getNombreCliente() {
@@ -79,13 +72,6 @@ public class ClienteRegistroDTO {
         this.password = password;
     }
     
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-    
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
     
     public String getTelefono() {
         return telefono;
@@ -110,6 +96,7 @@ public class ClienteRegistroDTO {
                 ", email='" + email + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", direccion='" + direccion + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

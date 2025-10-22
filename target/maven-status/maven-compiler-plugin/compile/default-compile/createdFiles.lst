@@ -22,6 +22,7 @@ com\applegym\controller\AuthController.class
 com\applegym\service\impl\CarritoServiceImpl.class
 com\applegym\service\ClienteService.class
 com\applegym\entity\Venta$EstadoVenta.class
+com\applegym\service\impl\ReporteServiceImpl.class
 com\applegym\controller\TestController.class
 com\applegym\dto\CategoriaDTO.class
 com\applegym\repository\ComprobanteRepository.class
@@ -49,8 +50,10 @@ com\applegym\entity\Categoria.class
 com\applegym\exception\DuplicateResourceException.class
 com\applegym\controller\CatalogoController.class
 com\applegym\entity\Cliente.class
+com\applegym\dto\ResumenReporteDTO.class
 com\applegym\repository\CarritoRepository.class
 com\applegym\service\impl\ProductoServiceImpl.class
+com\applegym\util\PasswordHashGenerator.class
 com\applegym\service\impl\ClienteServiceImpl.class
 com\applegym\dto\PagoDTO.class
 com\applegym\controller\TestControllerFull.class
@@ -60,12 +63,16 @@ com\applegym\dto\CarritoDTO.class
 com\applegym\repository\ServicioRepository.class
 com\applegym\AppleGymApplication.class
 com\applegym\exception\ResourceNotFoundException.class
+com\applegym\dto\TopItemDTO.class
 com\applegym\service\PdfService.class
 com\applegym\repository\VentaRepository.class
 com\applegym\service\impl\CategoriaServiceImpl.class
+com\applegym\controller\ReporteController.class
 com\applegym\dto\DetalleCarritoDTO.class
 com\applegym\entity\Pago$EstadoPago.class
 com\applegym\config\ModelMapperConfig.class
 com\applegym\entity\DetalleCarrito.class
 com\applegym\dto\ComprobanteDTO.class
 com\applegym\dto\DetalleVentaDTO.class
+com\applegym\service\ReporteService.class
+com\applegym\dto\VentasPorFechaDTO.class

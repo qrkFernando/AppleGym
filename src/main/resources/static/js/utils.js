@@ -102,7 +102,19 @@ function loadUserData() {
         try {
             currentUser = JSON.parse(userData);
             console.log('Usuario cargado desde localStorage:', currentUser);
+            console.log('Rol del usuario:', currentUser.rol);
             console.log('Token disponible:', currentUser.token ? 'Sí - ' + currentUser.token.substring(0, 20) + '...' : 'No');
+            
+            // Si es ADMIN y está en una página de cliente, redirigir al dashboard
+            const currentPage = window.location.pathname;
+            const isAdminPage = currentPage.includes('admin-dashboard.html');
+            
+            if (currentUser.rol === 'ADMIN' && !isAdminPage) {
+                console.log('🔄 Admin detectado en página de cliente, redirigiendo al dashboard...');
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+            
             updateNavbar();
         } catch (e) {
             console.error('Error cargando datos de usuario:', e);

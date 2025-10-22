@@ -1,273 +1,411 @@
-# AppleGym - Sistema de Gestión para Gimnasio
+# 🏋️ AppleGym - Sistema de Gestión de Gimnasio
 
-## Descripción
+<div align="center">
 
-AppleGym es un sistema completo de gestión para gimnasios que implementa una arquitectura Cliente-Servidor robusta y segura. El sistema permite a los clientes navegar por el catálogo de productos y servicios, gestionar carritos de compra, realizar pagos y recibir comprobantes digitales.
+![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=java)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen?style=for-the-badge&logo=spring)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?style=for-the-badge&logo=mysql)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-## Características Principales
+**Sistema web completo para la gestión integral de un gimnasio con E-commerce y Dashboard Administrativo**
 
-- ✅ **Arquitectura Cliente-Servidor** con API REST
-- ✅ **Patrón MVC** (Model-View-Controller)
-- ✅ **Principios SOLID** en el diseño
-- ✅ **Patrón DAO** con Spring Data JPA
-- ✅ **TDD** (Test Driven Development)
-- ✅ **Seguridad JWT** con Spring Security
-- ✅ **Validación de datos** con Bean Validation
-- ✅ **Logging** con Logback
-- ✅ **Librerías de apoyo**: Google Guava, Apache POI, Apache Commons
+[Características](#-características-principales) • [Instalación](#-instalación-rápida) • [Uso](#-uso) • [Documentación](#-documentación)
 
-## Tecnologías Utilizadas
-
-### Backend
-- **Java 17**
-- **Spring Boot 3.2.0**
-- **Spring Security** (JWT Authentication)
-- **Spring Data JPA**
-- **MySQL 8.0**
-- **Maven** (Gestión de dependencias)
-
-### Librerías Principales
-- **Google Guava** - Utilidades y colecciones
-- **Apache POI** - Manipulación de documentos Office
-- **Apache Commons** - Utilidades comunes
-- **Logback** - Sistema de logging
-- **ModelMapper** - Mapeo de objetos
-- **Jackson** - Procesamiento JSON
-
-### Testing
-- **JUnit 5**
-- **Mockito**
-- **Spring Boot Test**
-- **H2 Database** (Tests)
-
-## Casos de Uso Implementados
-
-### CU01 - Registro de Cliente
-- Registro de nuevos usuarios con validación de datos
-- Verificación de email único
-- Encriptación segura de contraseñas
-- Generación automática de token JWT
-
-### CU02 - Inicio de Sesión
-- Autenticación con JWT
-- Validación de credenciales
-- Manejo de sesiones stateless
-
-### CU03 - Explorar Productos y Servicios
-- Catálogo público accesible sin autenticación
-- Filtrado por categorías, precios y términos de búsqueda
-- Paginación y ordenamiento
-- Información de disponibilidad
-
-### CU04 - Seleccionar Producto o Servicio
-- Visualización detallada de productos/servicios
-- Información de stock y disponibilidad
-- Productos/servicios relacionados
-- Validación de estado activo
-
-### CU05 - Agregar al Carrito
-- Gestión de carrito de compras por usuario
-- Validación de disponibilidad
-- Cálculo automático de totales
-- Aplicación de promociones
-
-### CU06-CU11 - Proceso de Compra Completo
-- Confirmación de carrito
-- Selección de método de pago
-- Procesamiento de pagos
-- Generación de comprobantes digitales
-- Autenticación antes de compra
-- Funcionalidad "Seguir comprando"
-
-## Estructura del Proyecto
-
-```
-src/
-├── main/
-│   ├── java/com/applegym/
-│   │   ├── entity/          # Entidades JPA
-│   │   ├── repository/      # Repositorios DAO
-│   │   ├── service/         # Lógica de negocio
-│   │   ├── controller/      # Controladores REST
-│   │   ├── dto/            # Data Transfer Objects
-│   │   ├── config/         # Configuraciones
-│   │   ├── security/       # Seguridad JWT
-│   │   ├── exception/      # Excepciones personalizadas
-│   │   └── util/           # Utilidades
-│   └── resources/
-│       ├── application.yml  # Configuración principal
-│       └── logback-spring.xml # Configuración de logging
-└── test/
-    └── java/com/applegym/  # Tests unitarios e integración
-```
-
-## Modelo de Base de Datos
-
-### Entidades Principales
-
-- **Cliente** - Información de usuarios del sistema
-- **Producto** - Productos disponibles (suplementos, ropa, etc.)
-- **Servicio** - Servicios del gimnasio (membresías, entrenamientos)
-- **Categoria** - Categorización de productos y servicios
-- **Carrito** - Carritos de compra de clientes
-- **Venta** - Transacciones completadas
-- **Pago** - Información de pagos realizados
-- **Comprobante** - Documentos generados
-- **Promocion** - Ofertas y descuentos
-
-## Configuración del Proyecto
-
-### Requisitos Previos
-
-- Java 17+
-- Maven 3.8+
-- MySQL 8.0+
-- IDE (IntelliJ IDEA, Eclipse, VS Code)
-
-### Instalación
-
-1. **Clonar el repositorio**
-```bash
-git clone <repository-url>
-cd Proyecto-Integrador-AppleGym
-```
-
-2. **Configurar base de datos MySQL**
-```sql
-CREATE DATABASE applegym;
-CREATE USER 'applegym_user'@'localhost' IDENTIFIED BY 'your_password';
-GRANT ALL PRIVILEGES ON applegym.* TO 'applegym_user'@'localhost';
-```
-
-3. **Configurar variables de entorno**
-```bash
-export DB_USERNAME=applegym_user
-export DB_PASSWORD=your_password
-export JWT_SECRET=your_jwt_secret_key_here
-export MAIL_USERNAME=your_email@gmail.com
-export MAIL_PASSWORD=your_email_password
-```
-
-4. **Compilar y ejecutar**
-```bash
-mvn clean install
-mvn spring-boot:run
-```
-
-### Configuración de Desarrollo
-
-La aplicación se ejecuta por defecto en `http://localhost:8080/api`
-
-#### Endpoints Principales
-
-- **Autenticación:**
-  - `POST /api/auth/register` - Registro de usuario
-  - `POST /api/auth/login` - Inicio de sesión
-  - `POST /api/auth/validate-token` - Validar token
-
-- **Catálogo:**
-  - `GET /api/catalogo` - Catálogo completo
-  - `GET /api/catalogo/productos/{id}` - Detalle de producto
-  - `GET /api/catalogo/servicios/{id}` - Detalle de servicio
-  - `GET /api/catalogo/buscar` - Búsqueda
-
-- **Clientes (autenticado):**
-  - `GET /api/clientes/perfil` - Perfil del cliente
-  - `PUT /api/clientes/perfil` - Actualizar perfil
-
-## Principios de Desarrollo Aplicados
-
-### SOLID
-- **S** - Single Responsibility: Cada clase tiene una responsabilidad específica
-- **O** - Open/Closed: Extensible sin modificar código existente
-- **L** - Liskov Substitution: Las implementaciones respetan los contratos
-- **I** - Interface Segregation: Interfaces específicas por funcionalidad
-- **D** - Dependency Inversion: Dependencias por abstracción, no implementación
-
-### Patrón DAO
-- Separación clara entre lógica de negocio y acceso a datos
-- Repositories implementan operaciones específicas de base de datos
-- Services manejan la lógica de negocio
-
-### TDD (Test Driven Development)
-- Tests unitarios para cada servicio
-- Cobertura de casos de éxito y error
-- Mocks para dependencias externas
-- Tests de integración para endpoints
-
-## Seguridad
-
-### Implementada
-- **JWT Authentication** - Tokens seguros para autenticación
-- **Password Encoding** - BCrypt con factor 12
-- **CORS Configuration** - Configuración de orígenes permitidos
-- **Input Validation** - Validación exhaustiva de datos de entrada
-- **SQL Injection Protection** - JPA/Hibernate previene inyección SQL
-- **Security Headers** - Headers de seguridad configurados
-
-### Recomendaciones Adicionales
-- Configurar HTTPS en producción
-- Implementar rate limiting
-- Monitoreo de seguridad con logs
-- Rotación regular de JWT secrets
-
-## Testing
-
-### Ejecutar Tests
-```bash
-# Todos los tests
-mvn test
-
-# Tests específicos
-mvn test -Dtest=ClienteServiceImplTest
-
-# Con cobertura
-mvn test jacoco:report
-```
-
-### Tipos de Test
-- **Unitarios** - Servicios y componentes individuales
-- **Integración** - Controladores y repositorios
-- **End-to-End** - Flujos completos de casos de uso
-
-## Logging
-
-### Configuración
-- **Desarrollo**: Consola + archivo
-- **Producción**: Solo archivo con rotación
-- **Niveles**: ERROR, WARN, INFO, DEBUG, TRACE
-
-### Archivos de Log
-- `logs/applegym.log` - Log principal
-- Rotación diaria con máximo 30 días
-- Máximo 50MB por archivo
-
-## Contribución
-
-### Estándares de Código
-- Seguir convenciones de Java
-- Documentar métodos públicos con Javadoc
-- Mantener cobertura de tests > 80%
-- Validar con SonarQube antes de commit
-
-### Proceso de Desarrollo
-1. Crear branch feature desde develop
-2. Implementar funcionalidad con tests
-3. Ejecutar tests y validaciones
-4. Pull request con revisión de código
-5. Merge a develop tras aprobación
-
-## Licencia
-
-Este proyecto es desarrollado para fines educativos como parte del curso de Programación Orientada a Objetos.
-
-## Contacto
-
-- **Equipo AppleGym**
-- **Institución**: [Tu Institución]
-- **Profesor**: [Nombre del Profesor]
-- **Período**: 2024
+</div>
 
 ---
 
-**Nota**: Este proyecto implementa todas las mejores prácticas de desarrollo Java moderno y está diseñado para ser un ejemplo completo de una aplicación empresarial robusta y escalable.
+## 📋 Descripción
+
+**AppleGym** es un sistema completo de gestión para gimnasios que implementa una arquitectura robusta Cliente-Servidor con API REST. El sistema permite:
+
+- 🛒 **E-commerce** completo para productos y servicios del gimnasio
+- 👥 **Gestión de clientes** con autenticación JWT
+- 📊 **Dashboard administrativo** con reportes y estadísticas en tiempo real
+- 💳 **Proceso de compra** completo con generación de comprobantes PDF
+- 📈 **Exportación de reportes** a Excel y PDF
+- 📦 **Control de inventario** automático
+
+---
+
+## ✨ Características Principales
+
+### Para Clientes
+- ✅ Registro y autenticación segura con JWT
+- ✅ Catálogo de productos y servicios desde base de datos
+- ✅ Carrito de compras persistente
+- ✅ Proceso de compra completo
+- ✅ Generación automática de comprobantes PDF
+- ✅ Filtros y búsqueda de productos
+- ✅ Visualización de stock en tiempo real
+
+### Para Administradores
+- ✅ Dashboard con estadísticas en tiempo real
+- ✅ Gráficos interactivos (Chart.js)
+  - Ventas por fecha
+  - Top 10 productos más vendidos
+  - Top 10 servicios más solicitados
+- ✅ Reportes con filtros por fecha
+- ✅ Exportación a Excel (Apache POI)
+- ✅ Exportación a PDF (preparado)
+- ✅ Gestión de stock automática
+- ✅ Control de ventas y clientes
+
+### Técnicas
+- ✅ Arquitectura Cliente-Servidor con API REST
+- ✅ Patrón MVC (Model-View-Controller)
+- ✅ Principios SOLID
+- ✅ Patrón DAO con Spring Data JPA
+- ✅ Seguridad JWT con Spring Security
+- ✅ Validación de datos con Bean Validation
+- ✅ Sistema de roles (ADMIN/CLIENTE)
+- ✅ Logging con Logback
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+### Backend
+| Tecnología | Versión | Propósito |
+|-----------|---------|-----------|
+| Java | 17 | Lenguaje principal |
+| Spring Boot | 3.2.0 | Framework |
+| Spring Security | 3.2.0 | Autenticación JWT |
+| Spring Data JPA | 3.2.0 | ORM |
+| MySQL | 8.0+ | Base de datos |
+| Maven | 3.8+ | Gestión de dependencias |
+
+### Frontend
+| Tecnología | Propósito |
+|-----------|-----------|
+| HTML5/CSS3 | Estructura y estilos |
+| JavaScript ES6+ | Lógica del cliente |
+| Chart.js | Gráficos interactivos |
+| Font Awesome | Iconos |
+
+### Librerías Principales
+- **Apache POI** - Generación de archivos Excel
+- **iText 7** - Generación de PDFs
+- **Google Guava** - Utilidades
+- **Apache Commons** - Funciones comunes
+- **ModelMapper** - Mapeo de objetos
+- **Jackson** - Procesamiento JSON
+- **Logback** - Sistema de logging
+
+---
+
+## 🚀 Instalación Rápida
+
+### Requisitos Previos
+
+```bash
+☑️ Java 17+
+☑️ Maven 3.8+
+☑️ MySQL 8.0+
+☑️ Git
+```
+
+### Paso 1: Clonar el Repositorio
+
+```bash
+git clone https://github.com/tu-usuario/AppleGym.git
+cd AppleGym
+```
+
+### Paso 2: Configurar Base de Datos
+
+```sql
+-- En MySQL Workbench o línea de comandos
+mysql -u root -p
+
+-- Ejecutar el script de instalación
+source database_setup.sql
+```
+
+O ejecutar manualmente:
+```sql
+CREATE DATABASE applegym CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Luego importar el archivo `database_setup.sql`
+
+### Paso 3: Configurar Variables de Entorno
+
+Editar `src/main/resources/application.properties`:
+
+```properties
+# Base de datos
+spring.datasource.url=jdbc:mysql://localhost:3306/applegym
+spring.datasource.username=root
+spring.datasource.password=tu_password
+
+# JWT
+jwt.secret=tu_clave_secreta_aqui_minimo_32_caracteres
+jwt.expiration=86400000
+
+# Email (opcional)
+spring.mail.username=tu_email@gmail.com
+spring.mail.password=tu_password
+```
+
+### Paso 4: Compilar y Ejecutar
+
+```bash
+# Limpiar y compilar
+mvn clean install
+
+# Ejecutar la aplicación
+mvn spring-boot:run
+```
+
+La aplicación estará disponible en: **http://localhost:8080**
+
+### Paso 5: Crear Usuario Administrador
+
+1. **Registrarse en la aplicación** con:
+   - Email: `applegym@admin.com`
+   - Password: `applegymadmin`
+   - Nombre: `Administrador AppleGym`
+
+2. **En MySQL, ejecutar:**
+   ```sql
+   UPDATE cliente SET rol = 'ADMIN' WHERE email = 'applegym@admin.com';
+   ```
+
+3. **Iniciar sesión** con las credenciales de admin
+
+---
+
+## 📖 Uso
+
+### Como Cliente
+
+1. **Abrir navegador** en `http://localhost:8080`
+2. **Registrarse** o **Iniciar sesión**
+3. **Explorar catálogo** de productos y servicios
+4. **Agregar al carrito** los items deseados
+5. **Realizar compra** y descargar comprobante PDF
+
+### Como Administrador
+
+1. **Iniciar sesión** con email `applegym@admin.com`
+2. Automáticamente redirige al **Dashboard**
+3. **Explorar estadísticas** en tiempo real
+4. **Filtrar ventas** por fecha
+5. **Exportar reportes** a Excel
+6. **Ver top productos/servicios**
+
+---
+
+## 📂 Estructura del Proyecto
+
+```
+AppleGym/
+├── src/
+│   ├── main/
+│   │   ├── java/com/applegym/
+│   │   │   ├── config/              # Configuraciones
+│   │   │   ├── controller/          # Controladores REST
+│   │   │   ├── dto/                 # Data Transfer Objects
+│   │   │   ├── entity/              # Entidades JPA
+│   │   │   ├── exception/           # Excepciones personalizadas
+│   │   │   ├── repository/          # Repositorios DAO
+│   │   │   ├── security/            # JWT y Seguridad
+│   │   │   ├── service/             # Lógica de negocio
+│   │   │   │   └── impl/           # Implementaciones
+│   │   │   └── util/               # Utilidades
+│   │   └── resources/
+│   │       ├── static/              # Frontend
+│   │       │   ├── css/            # Estilos
+│   │       │   ├── js/             # JavaScript
+│   │       │   ├── images/         # Imágenes
+│   │       │   ├── index.html      # Página principal
+│   │       │   ├── catalogo.html   # Catálogo
+│   │       │   └── admin-dashboard.html  # Dashboard admin
+│   │       ├── application.properties    # Configuración
+│   │       └── logback-spring.xml       # Logging
+│   └── test/                        # Tests
+├── docs/                            # Documentación adicional
+├── database_setup.sql               # Script de instalación de BD
+├── pom.xml                         # Dependencias Maven
+└── README.md                       # Este archivo
+```
+
+---
+
+## 🔐 API Endpoints
+
+### Autenticación
+```
+POST   /api/auth/register          - Registrar nuevo usuario
+POST   /api/auth/login             - Iniciar sesión
+POST   /api/auth/validate-token    - Validar token JWT
+```
+
+### Catálogo (Público)
+```
+GET    /api/catalogo               - Obtener catálogo completo
+GET    /api/catalogo/productos     - Listar productos
+GET    /api/catalogo/servicios     - Listar servicios
+```
+
+### Carrito (Autenticado)
+```
+GET    /api/carrito                - Obtener carrito actual
+POST   /api/carrito/agregar        - Agregar item
+PUT    /api/carrito/actualizar     - Actualizar cantidad
+DELETE /api/carrito/eliminar/{id}  - Eliminar item
+DELETE /api/carrito/limpiar        - Vaciar carrito
+```
+
+### Ventas (Autenticado)
+```
+POST   /api/ventas/procesar        - Procesar venta
+GET    /api/ventas/{id}            - Obtener detalle de venta
+GET    /api/ventas/{id}/comprobante - Descargar comprobante PDF
+```
+
+### Reportes (Admin)
+```
+GET    /api/reportes/resumen                 - Resumen general
+GET    /api/reportes/productos-top           - Top productos
+GET    /api/reportes/servicios-top           - Top servicios
+GET    /api/reportes/ventas-por-fecha        - Ventas por fecha
+GET    /api/reportes/export/excel            - Exportar Excel
+GET    /api/reportes/export/pdf              - Exportar PDF
+```
+
+---
+
+## 🗄️ Modelo de Base de Datos
+
+### Tablas Principales
+
+| Tabla | Descripción |
+|-------|-------------|
+| `cliente` | Usuarios del sistema (clientes y admin) |
+| `categoria` | Categorías de productos/servicios |
+| `producto` | Productos disponibles |
+| `servicio` | Servicios del gimnasio |
+| `carrito` | Carritos de compra |
+| `detalle_carrito` | Items del carrito |
+| `venta` | Ventas procesadas |
+| `detalle_venta` | Detalle de cada venta |
+| `pago` | Información de pagos |
+| `comprobante` | Comprobantes generados |
+
+---
+
+## 🧪 Testing
+
+```bash
+# Ejecutar todos los tests
+mvn test
+
+# Tests con cobertura
+mvn test jacoco:report
+
+# Tests específicos
+mvn test -Dtest=ClienteServiceTest
+```
+
+---
+
+## 📊 Características del Dashboard
+
+### Estadísticas en Tiempo Real
+- 💰 Ventas totales
+- 🛒 Número de ventas
+- 👥 Clientes activos
+- 📦 Total de productos
+
+### Gráficos Dinámicos
+- 📈 Gráfico de línea: Ventas por fecha
+- 📊 Gráfico de barras: Top 10 productos
+- 📊 Gráfico de barras: Top 10 servicios
+
+### Funcionalidades
+- 🔍 Filtros por rango de fechas
+- 📥 Exportación a Excel
+- 📄 Exportación a PDF (preparado)
+- 🔄 Actualización automática
+- 📋 Tablas detalladas
+
+---
+
+## 🔒 Seguridad
+
+### Implementada
+- ✅ Autenticación JWT con tokens de 24 horas
+- ✅ Encriptación de contraseñas con BCrypt
+- ✅ Validación de datos de entrada
+- ✅ Protección contra SQL Injection
+- ✅ Sistema de roles (ADMIN/CLIENTE)
+- ✅ CORS configurado
+- ✅ Headers de seguridad
+
+### Recomendaciones Adicionales
+- 🔐 Configurar HTTPS en producción
+- 🚦 Implementar rate limiting
+- 📝 Monitoreo de seguridad con logs
+- 🔄 Rotación regular de secrets
+
+---
+
+## 📝 Logging
+
+Los logs se generan en `logs/applegym.log` con:
+- Rotación diaria
+- Máximo 30 días de retención
+- Niveles: ERROR, WARN, INFO, DEBUG
+
+---
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crear feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
+4. Push al branch (`git push origin feature/AmazingFeature`)
+5. Abrir Pull Request
+
+---
+
+## 📄 Licencia
+
+Este proyecto es desarrollado con fines educativos.
+
+---
+
+## 👥 Autores
+
+- **Equipo AppleGym** - Desarrollo completo del sistema
+
+---
+
+## 🙏 Agradecimientos
+
+- Spring Framework Team
+- Chart.js contributors
+- Apache POI contributors
+- Comunidad de desarrolladores Java
+
+---
+
+## 📞 Soporte
+
+Si encuentras algún problema o tienes preguntas:
+
+1. Revisa la [documentación](docs/)
+2. Abre un [Issue](https://github.com/tu-usuario/AppleGym/issues)
+3. Contacta al equipo de desarrollo
+
+---
+
+<div align="center">
+
+**⭐ Si te gusta este proyecto, dale una estrella en GitHub ⭐**
+
+Hecho con ❤️ por el equipo de AppleGym
+
+</div>

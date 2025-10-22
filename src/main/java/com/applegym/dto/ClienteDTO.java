@@ -36,6 +36,8 @@ public class ClienteDTO {
     
     private Boolean activo;
     
+    private String rol;
+    
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime fechaRegistro;
     
@@ -103,6 +105,14 @@ public class ClienteDTO {
     
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+    
+    public String getRol() {
+        return rol;
+    }
+    
+    public void setRol(String rol) {
+        this.rol = rol;
     }
     
     public LocalDateTime getFechaRegistro() {

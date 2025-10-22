@@ -1,13 +1,10 @@
 package com.applegym.service.impl;
 
-import com.applegym.dto.ClienteDTO;
-import com.applegym.dto.ClienteRegistroDTO;
-import com.applegym.entity.Cliente;
-import com.applegym.repository.ClienteRepository;
-import com.applegym.service.ClienteService;
-import com.applegym.exception.ResourceNotFoundException;
-import com.applegym.exception.DuplicateResourceException;
-import com.applegym.exception.InvalidDataException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -17,11 +14,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.applegym.dto.ClienteDTO;
+import com.applegym.dto.ClienteRegistroDTO;
+import com.applegym.entity.Cliente;
+import com.applegym.exception.DuplicateResourceException;
+import com.applegym.exception.InvalidDataException;
+import com.applegym.exception.ResourceNotFoundException;
+import com.applegym.repository.ClienteRepository;
+import com.applegym.service.ClienteService;
 
 /**
  * Implementación del servicio de Cliente.
@@ -208,7 +208,7 @@ public class ClienteServiceImpl implements ClienteService {
         if (cliente == null) {
             return null;
         }
-        
+
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setIdCliente(cliente.getIdCliente());
         clienteDTO.setNombreCliente(cliente.getNombreCliente());
@@ -216,9 +216,10 @@ public class ClienteServiceImpl implements ClienteService {
         clienteDTO.setTelefono(cliente.getTelefono());
         clienteDTO.setDireccion(cliente.getDireccion());
         clienteDTO.setActivo(cliente.getActivo());
+        clienteDTO.setRol(cliente.getRol());  // ← AGREGADO
         clienteDTO.setFechaRegistro(cliente.getFechaRegistro());
         clienteDTO.setFechaActualizacion(cliente.getFechaActualizacion());
-        
+
         return clienteDTO;
     }
     
@@ -241,10 +242,6 @@ public class ClienteServiceImpl implements ClienteService {
     private void validarDatosRegistro(ClienteRegistroDTO clienteRegistroDTO) {
         if (clienteRegistroDTO == null) {
             throw new InvalidDataException("Los datos del cliente son obligatorios");
-        }
-        
-        if (!clienteRegistroDTO.isPasswordMatch()) {
-            throw new InvalidDataException("Las contraseñas no coinciden");
         }
         
         // Validaciones adicionales pueden ir aquí

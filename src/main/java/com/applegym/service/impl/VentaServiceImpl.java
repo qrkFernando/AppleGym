@@ -170,13 +170,41 @@ public class VentaServiceImpl implements VentaService {
     }
     
     private void actualizarStock(java.util.List<DetalleCarrito> detalles) {
-        // Aquí se actualizaría el stock de productos
-        // Por simplicidad, solo registramos el log
         for (DetalleCarrito detalle : detalles) {
-            if ("PRODUCTO".equals(detalle.getTipo())) {
-                logger.info("Actualizando stock del producto ID: {}, Cantidad vendida: {}", 
-                          detalle.getIdItem(), detalle.getCantidad());
-                // TODO: Implementar actualización real de stock
+            if ("PRODUCTO".equalsIgnoreCase(detalle.getTipo())) {
+                // Buscar el producto
+                Producto producto = productoRepository.findById(detalle.getIdItem())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                        "Producto no encontrado: " + detalle.getIdItem()));
+                
+                // Verificar si hay suficiente stock
+                if (producto.getStock() < detalle.getCantidad()) {
+                    throw new IllegalStateException(
+                        "Stock insuficiente para el producto: " + producto.getNombre() + 
+                        ". Disponible: " + producto.getStock() + 
+                        ", Solicitado: " + detalle.getCantidad());
+                }
+                
+                // Actualizar el stock
+                int nuevoStock = producto.getStock() - detalle.getCantidad();
+                producto.setStock(nuevoStock);
+                
+                // NO desactivar el producto, solo actualizar stock
+                // El producto seguirá visible pero mostrará "Sin stock"
+                
+                productoRepository.save(producto);
+                
+                logger.info("Stock actualizado - Producto: {} (ID: {}), Stock anterior: {}, Vendido: {}, Nuevo stock: {}", 
+                           producto.getNombre(), 
+                           producto.getIdProducto(),
+                           producto.getStock() + detalle.getCantidad(),
+                           detalle.getCantidad(), 
+                           nuevoStock);
+                
+                if (nuevoStock <= 0) {
+                    logger.warn("Producto '{}' (ID: {}) sin stock disponible", 
+                               producto.getNombre(), producto.getIdProducto());
+                }
             }
         }
     }

@@ -182,4 +182,57 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
      */
     @Query("SELECT v FROM Venta v WHERE v.estado = 'PAGADO' AND v.comprobante IS NULL")
     List<Venta> findVentasQueRequierenComprobante();
+    
+    // ===========================================================================
+    // MÉTODOS PARA REPORTES Y ESTADÍSTICAS
+    // ===========================================================================
+    
+    /**
+     * Calcula el total de todas las ventas completadas.
+     */
+    @Query("SELECT COALESCE(SUM(v.total), 0) FROM Venta v WHERE v.estado IN ('COMPLETADO', 'PAGADO')")
+    BigDecimal calcularVentasTotales();
+    
+    /**
+     * Calcula ventas por rango de fecha.
+     */
+    @Query("SELECT COALESCE(SUM(v.total), 0) FROM Venta v WHERE " +
+           "v.fechaVenta BETWEEN :inicio AND :fin AND v.estado IN ('COMPLETADO', 'PAGADO')")
+    BigDecimal calcularVentasPorRangoFecha(@Param("inicio") LocalDateTime inicio, 
+                                          @Param("fin") LocalDateTime fin);
+    
+    /**
+     * Encuentra la fecha de la última venta.
+     */
+    @Query("SELECT MAX(v.fechaVenta) FROM Venta v")
+    LocalDateTime findFechaUltimaVenta();
+    
+    /**
+     * Obtiene los productos más vendidos.
+     */
+    @Query("SELECT dv.idProductoServicio, dv.nombre, SUM(dv.cantidad), SUM(dv.subtotal) " +
+           "FROM DetalleVenta dv WHERE dv.tipo = 'PRODUCTO' " +
+           "GROUP BY dv.idProductoServicio, dv.nombre " +
+           "ORDER BY SUM(dv.cantidad) DESC")
+    List<Object[]> findTopProductosMasVendidos(int limit);
+    
+    /**
+     * Obtiene los servicios más solicitados.
+     */
+    @Query("SELECT dv.idProductoServicio, dv.nombre, SUM(dv.cantidad), SUM(dv.subtotal) " +
+           "FROM DetalleVenta dv WHERE dv.tipo = 'SERVICIO' " +
+           "GROUP BY dv.idProductoServicio, dv.nombre " +
+           "ORDER BY SUM(dv.cantidad) DESC")
+    List<Object[]> findTopServiciosMasSolicitados(int limit);
+    
+    /**
+     * Obtiene ventas agrupadas por fecha.
+     */
+    @Query("SELECT CAST(v.fechaVenta AS date), COUNT(v), SUM(v.total) " +
+           "FROM Venta v WHERE v.fechaVenta BETWEEN :inicio AND :fin " +
+           "AND v.estado IN ('COMPLETADO', 'PAGADO') " +
+           "GROUP BY CAST(v.fechaVenta AS date) " +
+           "ORDER BY CAST(v.fechaVenta AS date)")
+    List<Object[]> findVentasPorFecha(@Param("inicio") LocalDateTime inicio, 
+                                     @Param("fin") LocalDateTime fin);
 }

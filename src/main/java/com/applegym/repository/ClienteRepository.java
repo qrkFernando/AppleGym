@@ -101,10 +101,15 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     
     /**
      * Busca los últimos clientes registrados.
-     * 
+     *
      * @param limit Número máximo de resultados
      * @return Lista de los últimos clientes registrados
      */
     @Query("SELECT c FROM Cliente c ORDER BY c.fechaRegistro DESC LIMIT :limit")
     List<Cliente> findUltimosClientesRegistrados(@Param("limit") int limit);
+    
+    /**
+     * Cuenta clientes por estado activo.
+     */
+    Long countByActivo(Boolean activo);
 }

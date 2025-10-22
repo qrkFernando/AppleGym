@@ -1,5 +1,27 @@
 package com.applegym.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.applegym.dto.ClienteDTO;
 import com.applegym.dto.ClienteRegistroDTO;
 import com.applegym.entity.Cliente;
@@ -8,23 +30,6 @@ import com.applegym.exception.InvalidDataException;
 import com.applegym.exception.ResourceNotFoundException;
 import com.applegym.repository.ClienteRepository;
 import com.applegym.service.impl.ClienteServiceImpl;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
 /**
  * Tests unitarios para ClienteServiceImpl.
@@ -61,7 +66,6 @@ class ClienteServiceImplTest {
         clienteRegistroDTO.setNombreCliente("Juan Pérez");
         clienteRegistroDTO.setEmail("juan.perez@email.com");
         clienteRegistroDTO.setPassword("password123");
-        clienteRegistroDTO.setConfirmPassword("password123");
         clienteRegistroDTO.setTelefono("987654321");
         clienteRegistroDTO.setDireccion("Av. Principal 123");
         
@@ -114,18 +118,7 @@ class ClienteServiceImplTest {
         
         verify(clienteRepository, never()).save(any(Cliente.class));
     }
-    
-    @Test
-    void registrarCliente_PasswordsNoCoinciden_LanzaExcepcion() {
-        // Arrange
-        clienteRegistroDTO.setConfirmPassword("different_password");
-        
-        // Act & Assert
-        assertThrows(InvalidDataException.class, 
-                    () -> clienteService.registrarCliente(clienteRegistroDTO));
-        
-        verify(clienteRepository, never()).save(any(Cliente.class));
-    }
+
     
     @Test
     void registrarCliente_DatosNulos_LanzaExcepcion() {

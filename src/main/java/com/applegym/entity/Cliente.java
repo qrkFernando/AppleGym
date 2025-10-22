@@ -59,6 +59,9 @@ public class Cliente implements UserDetails {
     @Column(name = "activo", nullable = false)
     private Boolean activo = true;
     
+    @Column(name = "rol", nullable = false, length = 20)
+    private String rol = "CLIENTE";
+    
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro;
     
@@ -88,7 +91,7 @@ public class Cliente implements UserDetails {
     // Métodos de UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_CLIENT"));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + rol.toUpperCase()));
     }
     
     @Override
@@ -178,6 +181,14 @@ public class Cliente implements UserDetails {
     
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+    
+    public String getRol() {
+        return rol;
+    }
+    
+    public void setRol(String rol) {
+        this.rol = rol;
     }
     
     public LocalDateTime getFechaRegistro() {

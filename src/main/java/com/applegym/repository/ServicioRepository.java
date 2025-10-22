@@ -26,4 +26,9 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
     
     @Query("SELECT s FROM Servicio s WHERE LOWER(s.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) AND s.activo = true")
     List<Servicio> findByNombreContainingIgnoreCase(@Param("nombre") String nombre);
+    
+    /**
+     * Cuenta servicios por estado activo.
+     */
+    Long countByActivo(Boolean activo);
 }

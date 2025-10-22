@@ -242,15 +242,6 @@ rol: ADMIN
 activo: 1
 ```
 
-### 6.3 Probar Login Admin
-
-1. **Cerrar sesión** (si estás logueado)
-2. **Iniciar sesión** con:
-   - Email: `applegym@admin.com`
-   - Password: `applegymadmin`
-3. **Debería redirigir** automáticamente al Dashboard de Admin
-
----
 
 ## ✅ Paso 7: Verificar Instalación
 

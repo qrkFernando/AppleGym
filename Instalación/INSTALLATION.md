@@ -242,15 +242,6 @@ rol: ADMIN
 activo: 1
 ```
 
-### 6.3 Probar Login Admin
-
-1. **Cerrar sesión** (si estás logueado)
-2. **Iniciar sesión** con:
-   - Email: `applegym@admin.com`
-   - Password: `applegymadmin`
-3. **Debería redirigir** automáticamente al Dashboard de Admin
-
----
 
 ## ✅ Paso 7: Verificar Instalación
 
@@ -280,13 +271,6 @@ Usar Postman o curl:
 # Test 1: Catálogo
 curl http://localhost:8080/api/catalogo
 
-# Test 2: Login
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"applegym@admin.com","password":"applegymadmin"}'
-
-# Deberías recibir un token JWT
-```
 
 ### Verificar Base de Datos
 

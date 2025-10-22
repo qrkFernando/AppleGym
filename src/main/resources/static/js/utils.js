@@ -2,6 +2,56 @@
 
 console.log('AppleGym Utils cargando...');
 
+// Password Toggle Function
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const button = input.parentElement.querySelector('.toggle-password');
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// Get image URL for product/service
+function getImageUrl(item) {
+    if (item.imagenUrl) {
+        // Si tiene imagen URL, construir la ruta completa
+        if (item.imagenUrl.startsWith('http')) {
+            return item.imagenUrl;
+        }
+        // Si es una ruta relativa, usar la carpeta images
+        return `images/${item.imagenUrl}`;
+    }
+    // Si no tiene imagen, retornar null para usar el icono
+    return null;
+}
+
+// Create responsive image element
+function createProductImage(item) {
+    const imageUrl = getImageUrl(item);
+    
+    if (imageUrl) {
+        return `
+            <img src="${imageUrl}" 
+                 alt="${item.nombre}" 
+                 class="product-img"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="product-icon-fallback" style="display: none;">
+                <i class="${item.icon || 'fas fa-box'}"></i>
+            </div>
+        `;
+    } else {
+        return `<i class="${item.icon || 'fas fa-box'}"></i>`;
+    }
+}
+
 // Modal Functions
 function showModal(modalId) {
     const modal = document.getElementById(modalId);
@@ -185,34 +235,43 @@ function setupEventListeners() {
 function showProductDetail(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
-    
+
     const productDetail = document.getElementById('product-detail');
     if (!productDetail) {
         console.warn('Elemento product-detail no encontrado');
         return;
     }
-    
+
+    const imageUrl = getImageUrl(product);
+    const imageHtml = imageUrl 
+        ? `<img src="${imageUrl}" alt="${product.nombre}" class="product-detail-img"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+           <div class="product-detail-icon-fallback" style="display: none;">
+               <i class="${product.icon || 'fas fa-box'}" style="font-size: 6rem; color: #42944C;"></i>
+           </div>`
+        : `<i class="${product.icon || 'fas fa-box'}" style="font-size: 6rem; color: #42944C;"></i>`;
+
     productDetail.innerHTML = `
         <div class="product-detail-content">
-            <div class="product-detail-image" style="text-align: center; margin-bottom: 2rem;">
-                <i class="${product.icon || 'fas fa-box'}" style="font-size: 6rem; color: #42944C;"></i>
+            <div class="product-detail-image" style="text-align: center; margin-bottom: 2rem; display: flex; justify-content: center; align-items: center; min-height: 200px;">
+                ${imageHtml}
             </div>
             <h2 style="color: #42944C; margin-bottom: 1rem;">${product.nombre}</h2>
             <p style="margin-bottom: 1.5rem; line-height: 1.6; color: #666;">${product.descripcion}</p>
-            
+
             <div class="product-details" style="margin-bottom: 2rem; background: #f8f9fa; padding: 1rem; border-radius: 8px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <span><strong>Precio:</strong></span>
                     <span style="color: #42944C; font-weight: 600; font-size: 1.2rem;">$${product.precio.toFixed(2)}</span>
                 </div>
-                
+
                 ${product.tipo === 'servicios' && product.duracion ? `
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span><strong>Duracion:</strong></span>
                         <span>${product.duracion} minutos</span>
                     </div>
                 ` : ''}
-                
+
                 ${product.stock !== undefined ? `
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span><strong>Stock:</strong></span>
@@ -221,15 +280,15 @@ function showProductDetail(productId) {
                         </span>
                     </div>
                 ` : ''}
-                
+
                 <div style="display: flex; justify-content: space-between;">
                     <span><strong>Categoria:</strong></span>
                     <span>${product.categoria || 'General'}</span>
                 </div>
             </div>
-            
+
             <div class="product-actions" style="display: flex; gap: 1rem;">
-                <button class="btn-primary" onclick="addToCart(${product.id}); closeModal('product-modal');" 
+                <button class="btn-primary" onclick="addToCart(${product.id}); closeModal('product-modal');"
                         ${product.stock !== undefined && product.stock === 0 ? 'disabled' : ''}
                         style="flex: 1;">
                     <i class="fas fa-cart-plus"></i> Agregar al Carrito
@@ -240,7 +299,7 @@ function showProductDetail(productId) {
             </div>
         </div>
     `;
-    
+
     showModal('product-modal');
 }
 

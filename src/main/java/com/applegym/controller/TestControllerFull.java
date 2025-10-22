@@ -151,14 +151,14 @@ public class TestControllerFull {
     public Map<String, Object> getProductos() {
         try {
             logger.info("Obteniendo productos desde base de datos MySQL");
-            
+
             List<Map<String, Object>> productosRaw = jdbcTemplate.queryForList(
-                "SELECT id_producto as id, nombre, descripcion, precio, stock, " +
+                "SELECT id_producto as id, nombre, descripcion, precio, stock, imagen_url as imagenUrl, " +
                 "c.nombre_categoria as categoria FROM producto p " +
                 "LEFT JOIN categoria c ON p.id_categoria = c.id_categoria " +
                 "WHERE p.activo = true"
             );
-            
+
             List<Map<String, Object>> productos = new ArrayList<>();
             for (Map<String, Object> prod : productosRaw) {
                 Map<String, Object> item = new HashMap<>();
@@ -169,19 +169,20 @@ public class TestControllerFull {
                 item.put("stock", prod.get("stock"));
                 item.put("tipo", "productos");
                 item.put("categoria", prod.get("categoria") != null ? prod.get("categoria") : "Sin categoría");
+                item.put("imagenUrl", prod.get("imagenUrl"));
                 item.put("icon", determinarIconoProducto((String) prod.get("categoria")));
                 item.put("disponible", ((Number) prod.get("stock")).intValue() > 0);
                 productos.add(item);
             }
-            
+
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("productos", productos);
             response.put("total", productos.size());
             response.put("source", "MySQL Database");
-            
+
             logger.info("Productos cargados: {}", productos.size());
-            
+
             return response;
         } catch (Exception e) {
             logger.error("Error al obtener productos: ", e);
@@ -196,14 +197,14 @@ public class TestControllerFull {
     public Map<String, Object> getServicios() {
         try {
             logger.info("Obteniendo servicios desde base de datos MySQL");
-            
+
             List<Map<String, Object>> serviciosRaw = jdbcTemplate.queryForList(
-                "SELECT id_servicio as id, nombre, descripcion, precio, duracion, " +
+                "SELECT id_servicio as id, nombre, descripcion, precio, duracion, imagen_url as imagenUrl, " +
                 "c.nombre_categoria as categoria FROM servicio s " +
                 "LEFT JOIN categoria c ON s.id_categoria = c.id_categoria " +
                 "WHERE s.activo = true"
             );
-            
+
             List<Map<String, Object>> servicios = new ArrayList<>();
             for (Map<String, Object> serv : serviciosRaw) {
                 Map<String, Object> item = new HashMap<>();
@@ -214,19 +215,20 @@ public class TestControllerFull {
                 item.put("duracion", serv.get("duracion"));
                 item.put("tipo", "servicios");
                 item.put("categoria", serv.get("categoria") != null ? serv.get("categoria") : "Sin categoría");
+                item.put("imagenUrl", serv.get("imagenUrl"));
                 item.put("icon", determinarIconoServicio((String) serv.get("categoria")));
                 item.put("disponible", true);
                 servicios.add(item);
             }
-            
+
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("servicios", servicios);
             response.put("total", servicios.size());
             response.put("source", "MySQL Database");
-            
+
             logger.info("Servicios cargados: {}", servicios.size());
-            
+
             return response;
         } catch (Exception e) {
             logger.error("Error al obtener servicios: ", e);
@@ -245,14 +247,16 @@ public class TestControllerFull {
             // Usar consultas nativas más simples
             List<Map<String, Object>> productosRaw = jdbcTemplate.queryForList(
                 "SELECT p.id_producto as id, p.nombre, p.descripcion, p.precio, p.stock, " +
+                "p.imagen_url as imagenUrl, " +
                 "COALESCE(c.nombre_categoria, 'Sin categoría') as categoria " +
                 "FROM producto p " +
                 "LEFT JOIN categoria c ON p.id_categoria = c.id_categoria " +
                 "WHERE p.activo = 1"
             );
-            
+
             List<Map<String, Object>> serviciosRaw = jdbcTemplate.queryForList(
                 "SELECT s.id_servicio as id, s.nombre, s.descripcion, s.precio, s.duracion, " +
+                "s.imagen_url as imagenUrl, " +
                 "COALESCE(c.nombre_categoria, 'Sin categoría') as categoria " +
                 "FROM servicio s " +
                 "LEFT JOIN categoria c ON s.id_categoria = c.id_categoria " +
@@ -272,11 +276,12 @@ public class TestControllerFull {
                 item.put("stock", prod.get("stock"));
                 item.put("tipo", "productos");
                 item.put("categoria", prod.get("categoria"));
+                item.put("imagenUrl", prod.get("imagenUrl"));
                 item.put("icon", determinarIconoProducto((String) prod.get("categoria")));
                 item.put("disponible", ((Number) prod.get("stock")).intValue() > 0);
                 items.add(item);
             }
-            
+
             // Agregar servicios
             for (Map<String, Object> serv : serviciosRaw) {
                 Map<String, Object> item = new HashMap<>();
@@ -287,6 +292,7 @@ public class TestControllerFull {
                 item.put("duracion", serv.get("duracion"));
                 item.put("tipo", "servicios");
                 item.put("categoria", serv.get("categoria"));
+                item.put("imagenUrl", serv.get("imagenUrl"));
                 item.put("icon", determinarIconoServicio((String) serv.get("categoria")));
                 item.put("disponible", true);
                 items.add(item);

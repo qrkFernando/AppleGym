@@ -32,7 +32,8 @@ function addToCart(productId) {
             precio: product.precio,
             tipo: product.tipo,
             quantity: 1,
-            icon: product.icon
+            icon: product.icon,
+            imagenUrl: product.imagenUrl
         });
     }
     
@@ -138,32 +139,43 @@ function renderCart() {
         return;
     }
     
-    cartItems.innerHTML = cart.map(item => `
+    cartItems.innerHTML = cart.map(item => {
+        const imageUrl = getImageUrl(item);
+        const imageHtml = imageUrl 
+            ? `<img src="${imageUrl}" alt="${item.nombre}" class="cart-item-img" 
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+               <div class="cart-item-icon-fallback" style="display: none;">
+                   <i class="${item.icon || 'fas fa-box'}"></i>
+               </div>`
+            : `<i class="${item.icon || 'fas fa-box'}"></i>`;
+        
+        return `
         <div class="cart-item" style="display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #eee;">
-            <div style="font-size: 2rem; color: #42944C; margin-right: 1rem;">
-                <i class="${item.icon || 'fas fa-box'}"></i>
+            <div class="cart-item-image" style="width: 60px; height: 60px; margin-right: 1rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #42944C; overflow: hidden; border-radius: 8px; background: #f5f5f5;">
+                ${imageHtml}
             </div>
             <div style="flex: 1;">
                 <div style="font-weight: 600; margin-bottom: 0.25rem;">${item.nombre}</div>
                 <div style="color: #666;">$${item.precio.toFixed(2)} c/u</div>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <button onclick="updateCartItemQuantity(${item.id}, -1)" 
+                <button onclick="updateCartItemQuantity(${item.id}, -1)"
                         style="background: #42944C; color: white; border: none; width: 30px; height: 30px; border-radius: 4px; cursor: pointer;">
                     <i class="fas fa-minus"></i>
                 </button>
                 <span style="margin: 0 0.5rem; font-weight: 600; min-width: 30px; text-align: center;">${item.quantity}</span>
-                <button onclick="updateCartItemQuantity(${item.id}, 1)" 
+                <button onclick="updateCartItemQuantity(${item.id}, 1)"
                         style="background: #42944C; color: white; border: none; width: 30px; height: 30px; border-radius: 4px; cursor: pointer;">
                     <i class="fas fa-plus"></i>
                 </button>
-                <button onclick="removeFromCart(${item.id})" 
+                <button onclick="removeFromCart(${item.id})"
                         style="background: #dc3545; color: white; border: none; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; margin-left: 0.5rem;">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
     
     const total = cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
     cartTotal.textContent = total.toFixed(2);

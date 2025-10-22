@@ -179,59 +179,59 @@ CREATE TABLE comprobante (
 -- =====================================================
 -- INSERTAR CATEGORÍAS
 -- =====================================================
-INSERT INTO categoria (nombre_categoria, descripcion) VALUES
-('Suplementos', 'Suplementos nutricionales y proteínas'),
-('Ropa', 'Ropa deportiva y accesorios de vestir'),
-('Accesorios', 'Accesorios para entrenamiento'),
-('Entrenamiento Personal', 'Servicios de entrenamiento personalizado'),
-('Clases Grupales', 'Clases grupales de diferentes disciplinas'),
-('Nutrición', 'Servicios de asesoría nutricional');
+INSERT INTO categoria (activo,descripcion,fecha_actualizacion,fecha_creacion,nombre_categoria) VALUES
+(1, 'Suplementos', NOW(), NOW(), 'Suplementos'),
+(1, 'Ropa', NOW(), NOW(), 'Ropa'),
+(1, 'Accesorios', NOW(), NOW(), 'Accesorios'),
+(1, 'Entrenamiento Personal', NOW(), NOW(), 'Entrenamiento Personal'),
+(1, 'Clases Grupales', NOW(), NOW(), 'Clases Grupales'),
+(1, 'Nutrición', NOW(), NOW(), 'Nutrición');
 
 -- =====================================================
 -- INSERTAR PRODUCTOS
 -- =====================================================
-INSERT INTO producto (nombre, descripcion, precio, stock, id_categoria, categoria) VALUES
+INSERT INTO producto (activo, descripcion,fecha_actualizacion, fecha_creacion, imagen_url, nombre, precio, stock, id_categoria) VALUES
 -- Suplementos
-('Proteína Whey Pro', 'Proteína de suero de leche de alta calidad, 2kg', 89.99, 50, 1, 'Suplementos'),
-('Creatina Monohidrato', 'Creatina pura para aumentar fuerza y masa muscular, 500g', 45.00, 75, 1, 'Suplementos'),
-('BCAA Complex', 'Aminoácidos ramificados para recuperación muscular', 55.00, 60, 1, 'Suplementos'),
-('Pre-Workout Extreme', 'Fórmula pre-entreno con cafeína y beta-alanina', 65.00, 40, 1, 'Suplementos'),
-('Omega 3 Fish Oil', 'Aceite de pescado con EPA y DHA, 90 cápsulas', 35.00, 100, 1, 'Suplementos'),
-('Multivitamínico Sport', 'Complejo vitamínico para deportistas, 60 tabletas', 28.00, 80, 1, 'Suplementos'),
+(1, 'Proteína Whey Pro', NOW(), NOW(), 'url_imagen_1', 'Proteína de suero de leche de alta calidad, 2kg', 89.99, 50, 1),
+(1, 'Creatina Monohidrato', NOW(), NOW(), 'url_imagen_2', 'Creatina pura para aumentar fuerza y masa muscular, 500g', 45.00, 75, 1),
+(1, 'BCAA Complex', NOW(), NOW(), 'url_imagen_3', 'Aminoácidos ramificados para recuperación muscular', 55.00, 60, 1),
+(1, 'Pre-Workout Extreme', NOW(), NOW(), 'url_imagen_4', 'Fórmula pre-entreno con cafeína y beta-alanina', 65.00, 40, 1),
+(1, 'Omega 3 Fish Oil', NOW(), NOW(), 'url_imagen_5', 'Aceite de pescado con EPA y DHA, 90 cápsulas', 35.00, 100, 1),
+(1, 'Multivitamínico Sport', NOW(), NOW(), 'url_imagen_6', 'Complejo vitamínico para deportistas, 60 tabletas', 28.00, 80, 1),
 
 -- Ropa
-('Camiseta Dry-Fit', 'Camiseta deportiva con tecnología de secado rápido', 35.00, 100, 2, 'Ropa'),
-('Short de Entrenamiento', 'Short cómodo para todo tipo de ejercicio', 42.00, 80, 2, 'Ropa'),
-('Leggins Deportivos', 'Leggins de compresión para mujer', 55.00, 70, 2, 'Ropa'),
-('Sudadera con Capucha', 'Sudadera cómoda para calentamiento', 75.00, 50, 2, 'Ropa'),
-('Top Deportivo Mujer', 'Top con soporte para entrenamiento intenso', 38.00, 60, 2, 'Ropa'),
+(1, 'Camiseta Dry-Fit', NOW(), NOW(), 'url_imagen_7', 'Camiseta deportiva con tecnología de secado rápido', 35.00, 100, 2),
+(1, 'Short de Entrenamiento', NOW(), NOW(), 'url_imagen_8', 'Short cómodo para todo tipo de ejercicio', 42.00, 80, 2),
+(1, 'Leggins Deportivos', NOW(), NOW(), 'url_imagen_9', 'Leggins de compresión para mujer', 55.00, 70, 2),
+(1, 'Sudadera con Capucha', NOW(), NOW(), 'url_imagen_10', 'Sudadera cómoda para calentamiento', 75.00, 50, 2),
+(1, 'Top Deportivo Mujer', NOW(), NOW(), 'url_imagen_11', 'Top con soporte para entrenamiento intenso', 38.00, 60, 2),
 
 -- Accesorios
-('Guantes de Gimnasio', 'Guantes con soporte de muñeca para levantamiento', 25.00, 90, 3, 'Accesorios'),
-('Shaker con Compartimentos', 'Shaker de 700ml con compartimentos para suplementos', 18.00, 120, 3, 'Accesorios'),
-('Banda de Resistencia Set', 'Set de 5 bandas con diferentes resistencias', 32.00, 85, 3, 'Accesorios'),
-('Colchoneta Yoga Pro', 'Colchoneta antideslizante de 6mm de grosor', 48.00, 40, 3, 'Accesorios'),
-('Botella Térmica 1L', 'Botella de acero inoxidable, mantiene temperatura 24hrs', 45.00, 65, 3, 'Accesorios');
+(1, 'Guantes de Gimnasio', NOW(), NOW(), 'url_imagen_12', 'Guantes con soporte de muñeca para levantamiento', 25.00, 90, 3),
+(1, 'Shaker con Compartimentos', NOW(), NOW(), 'url_imagen_13', 'Shaker de 700ml con compartimentos para suplementos', 18.00, 120, 3),
+(1, 'Banda de Resistencia Set', NOW(), NOW(), 'url_imagen_14', 'Set de 5 bandas con diferentes resistencias', 32.00, 85, 3),
+(1, 'Colchoneta Yoga Pro', NOW(), NOW(), 'url_imagen_15', 'Colchoneta antideslizante de 6mm de grosor', 48.00, 40, 3),
+(1, 'Botella Térmica 1L', NOW(), NOW(), 'url_imagen_16', 'Botella de acero inoxidable, mantiene temperatura 24hrs', 45.00, 65, 3);
 
 -- =====================================================
 -- INSERTAR SERVICIOS
 -- =====================================================
-INSERT INTO servicio (nombre, descripcion, precio, duracion, id_categoria, categoria) VALUES
+INSERT INTO servicio (activo,capacidad_maxima, descripcion, duracion, fecha_actualizacion, fecha_creacion, imagen_url, precio,id_categoria) VALUES
 -- Entrenamiento Personal
-('Entrenamiento Personal 1 Sesión', 'Sesión individual con entrenador certificado', 45.00, 60, 4, 'Entrenamiento Personal'),
-('Plan Mensual Personal', 'Plan de 12 sesiones mensuales personalizadas', 480.00, 60, 4, 'Entrenamiento Personal'),
-('Evaluación Física Completa', 'Análisis de composición corporal y evaluación física', 35.00, 45, 4, 'Entrenamiento Personal'),
+(1, 1, 'Entrenamiento Personal 1 Sesión', 60, NOW(), NOW(), 'url_imagen_1', 45.00, 4),
+(1, 12, 'Plan Mensual Personal', 60, NOW(), NOW(), 'url_imagen_2', 480.00, 4),
+(1, 1, 'Evaluación Física Completa', 45, NOW(), NOW(), 'url_imagen_3', 35.00, 4),
 
 -- Clases Grupales
-('Clase de Spinning', 'Clase grupal de ciclismo indoor de alta intensidad', 15.00, 45, 5, 'Clases Grupales'),
-('Clase de Yoga', 'Clase de yoga para todos los niveles', 18.00, 60, 5, 'Clases Grupales'),
-('CrossFit WOD', 'Workout of the Day - Entrenamiento funcional', 20.00, 60, 5, 'Clases Grupales'),
-('Zumba Fitness', 'Clase de baile aeróbico con ritmos latinos', 15.00, 50, 5, 'Clases Grupales'),
-('Body Combat', 'Clase de artes marciales coreografiadas', 18.00, 55, 5, 'Clases Grupales'),
+(1, 1, 'Clase de Spinning', 45, NOW(), NOW(), 'url_imagen_4', 15.00, 5),
+(1, 1, 'Clase de Yoga', 60, NOW(), NOW(), 'url_imagen_5', 18.00, 5),
+(1, 1, 'CrossFit WOD', 60, NOW(), NOW(), 'url_imagen_6', 20.00, 5),
+(1, 1, 'Zumba Fitness', 50, NOW(), NOW(), 'url_imagen_7', 15.00, 5),
+(1, 1, 'Body Combat', 55, NOW(), NOW(), 'url_imagen_8', 18.00, 5),
 
 -- Nutrición
-('Consulta Nutricional', 'Consulta con nutricionista deportivo', 60.00, 60, 6, 'Nutrición'),
-('Plan Nutricional Mensual', 'Plan alimenticio personalizado con seguimiento', 250.00, 60, 6, 'Nutrición');
+(1, 1, 'Consulta Nutricional', 60, NOW(), NOW(), 'url_imagen_9', 60.00, 6),
+(1, 1, 'Plan Nutricional Mensual', 60, NOW(), NOW(), 'url_imagen_10', 250.00, 6);
 
 -- =====================================================
 -- CREAR USUARIO ADMINISTRADOR

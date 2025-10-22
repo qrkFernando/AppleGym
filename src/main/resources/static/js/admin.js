@@ -445,3 +445,5 @@ function formatDate(date) {
 }
 
 console.log('Admin Dashboard cargado correctamente!');
+
+

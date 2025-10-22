@@ -83,24 +83,24 @@ function renderCatalog() {
     catalogGrid.innerHTML = filteredProducts.map(item => `
         <div class="product-card" onclick="showProductDetail(${item.id})">
             <div class="product-image">
-                <i class="${item.icon || 'fas fa-box'}"></i>
+                ${createProductImage(item)}
             </div>
             <div class="product-info">
                 <div class="product-name">${item.nombre}</div>
                 <div class="product-description">${item.descripcion}</div>
                 <div class="product-price">$${item.precio.toFixed(2)}</div>
-                ${item.tipo === 'servicios' && item.duracion ? 
+                ${item.tipo === 'servicios' && item.duracion ?
                     `<div class="product-duration" style="color: #666; font-size: 0.9rem; margin: 0.5rem 0;">
                         <i class="fas fa-clock"></i> ${item.duracion} minutos
                     </div>` : ''
                 }
-                ${item.stock !== undefined ? 
+                ${item.stock !== undefined ?
                     `<div class="product-stock" style="color: ${item.stock > 0 ? '#42944C' : '#dc3545'}; font-size: 0.9rem; margin: 0.5rem 0;">
                         <i class="fas fa-box"></i> ${item.stock > 0 ? `Stock: ${item.stock}` : 'Sin stock'}
                     </div>` : ''
                 }
                 <div class="product-actions">
-                    <button class="btn-primary btn-small" onclick="event.stopPropagation(); addToCart(${item.id})" 
+                    <button class="btn-primary btn-small" onclick="event.stopPropagation(); addToCart(${item.id})"
                             ${item.stock !== undefined && item.stock === 0 ? 'disabled' : ''}>
                         <i class="fas fa-cart-plus"></i> Agregar
                     </button>

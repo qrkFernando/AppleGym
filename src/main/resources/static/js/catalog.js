@@ -115,7 +115,7 @@ function renderCatalog() {
     catalogGrid.innerHTML = filteredProducts.map(item => `
         <div class="product-card" onclick="showProductDetail(${item.id})">
             <div class="product-image">
-                <i class="${item.icon || 'fas fa-box'}"></i>
+                ${createProductImage(item)}
             </div>
             <div class="product-info">
                 <div class="product-name">${item.nombre}</div>

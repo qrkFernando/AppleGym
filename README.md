@@ -379,7 +379,7 @@ Este proyecto es desarrollado con fines educativos.
 
 ## 👥 Autores
 
-- **Equipo AppleGym** - Desarrollo completo del sistema
+- **Equipo AppleGym-GRUPO 10** - Desarrollo completo del sistema
 
 ---
 

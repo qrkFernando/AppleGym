@@ -89,6 +89,7 @@ body {
     padding: 1rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    height: 100%;
 }
 
 .nav-brand {
@@ -98,6 +99,13 @@ body {
     font-weight: 700;
     color: var(--primary-green);
 }
+.nav-brand img {
+ height: 100px;
+ width: 100px;
+ max-height: 100%;
+ margin-right: 5px;
+}
+
 
 
 .nav-menu {
